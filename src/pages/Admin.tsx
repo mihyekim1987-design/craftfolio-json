@@ -15,6 +15,67 @@ import { SkillsTab } from "@/components/admin/SkillsTab";
 import { ProjectsTab } from "@/components/admin/ProjectsTab";
 import { AwardsTab } from "@/components/admin/AwardsTab";
 
+// 타입 정의
+interface Experience {
+    id: number;
+    company: string;
+    position: string;
+    period: string;
+    description: string;
+    achievements: string[];
+}
+
+interface PortfolioData {
+    personal: {
+        name: string;
+        title: string;
+        tagline: string;
+        bio: string;
+        location: string;
+        email: string;
+        phone: string;
+        github: string;
+        linkedin: string;
+        website: string;
+        profileImage: string;
+        stats: {
+            experience: string;
+            projects: string;
+            clients: string;
+        };
+    };
+    experience: Experience[];
+    skills: Array<{
+        category: string;
+        items: Array<{
+            name: string;
+            level: number;
+        }>;
+    }>;
+    projects: Array<{
+        id: number;
+        title: string;
+        description: string;
+        image: string;
+        tags: string[];
+        tech: string[];
+        contribution: string;
+        impact: string;
+        links: {
+            demo?: string;
+            github?: string;
+        };
+    }>;
+    awards: Array<{
+        id: number;
+        title: string;
+        period: string;
+        institution: string;
+        category: 'award' | 'certification' | 'training';
+        details: string;
+    }>;
+}
+
 /**
  * 관리자 페이지 컴포넌트
  * 로고를 5번 클릭하면 접근 가능한 숨겨진 관리자 페이지
@@ -22,9 +83,9 @@ import { AwardsTab } from "@/components/admin/AwardsTab";
  */
 export const Admin = () => {
     const navigate = useNavigate();
-    const [data, setData] = useState(portfolioData);
+    const [data, setData] = useState<PortfolioData>(portfolioData as PortfolioData);
     const [activeTab, setActiveTab] = useState("personal");
-    const [editingItem, setEditingItem] = useState<any>(null);
+    const [editingItem, setEditingItem] = useState<Experience | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // 통계 상태
@@ -100,14 +161,14 @@ export const Admin = () => {
         }));
     };
 
-    // 배열 아이템 추가
-    const handleAddItem = (section: string, newItem: any) => {
-        const maxId = Math.max(...(data[section as keyof typeof data] as any[]).map((item: any) => item.id || 0), 0);
+    // 경력 아이템 추가
+    const handleAddExperience = (newItem: Omit<Experience, 'id'>) => {
+        const maxId = Math.max(...data.experience.map(item => item.id), 0);
         const itemWithId = { ...newItem, id: maxId + 1 };
 
         setData(prev => ({
             ...prev,
-            [section]: [...(prev[section as keyof typeof prev] as any[]), itemWithId]
+            experience: [...prev.experience, itemWithId]
         }));
 
         setIsDialogOpen(false);
@@ -115,15 +176,15 @@ export const Admin = () => {
 
         toast({
             title: "추가 완료",
-            description: "새 항목이 추가되었습니다.",
+            description: "새 경력이 추가되었습니다.",
         });
     };
 
-    // 배열 아이템 수정
-    const handleUpdateItem = (section: string, updatedItem: any) => {
+    // 경력 아이템 수정
+    const handleUpdateExperience = (updatedItem: Experience) => {
         setData(prev => ({
             ...prev,
-            [section]: (prev[section as keyof typeof prev] as any[]).map((item: any) =>
+            experience: prev.experience.map(item =>
                 item.id === updatedItem.id ? updatedItem : item
             )
         }));
@@ -133,20 +194,20 @@ export const Admin = () => {
 
         toast({
             title: "수정 완료",
-            description: "항목이 수정되었습니다.",
+            description: "경력이 수정되었습니다.",
         });
     };
 
-    // 배열 아이템 삭제
-    const handleDeleteItem = (section: string, id: number) => {
+    // 경력 아이템 삭제
+    const handleDeleteExperience = (id: number) => {
         setData(prev => ({
             ...prev,
-            [section]: (prev[section as keyof typeof prev] as any[]).filter((item: any) => item.id !== id)
+            experience: prev.experience.filter(item => item.id !== id)
         }));
 
         toast({
             title: "삭제 완료",
-            description: "항목이 삭제되었습니다.",
+            description: "경력이 삭제되었습니다.",
         });
     };
 
@@ -322,9 +383,9 @@ export const Admin = () => {
                             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>취소</Button>
                             <Button onClick={() => {
                                 if (editingItem?.id) {
-                                    handleUpdateItem('experience', editingItem);
+                                    handleUpdateExperience(editingItem as Experience);
                                 } else {
-                                    handleAddItem('experience', editingItem);
+                                    handleAddExperience(editingItem as Omit<Experience, 'id'>);
                                 }
                             }}>
                                 {editingItem?.id ? '수정' : '추가'}
@@ -357,7 +418,7 @@ export const Admin = () => {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => handleDeleteItem('experience', exp.id)}
+                                        onClick={() => handleDeleteExperience(exp.id)}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </Button>

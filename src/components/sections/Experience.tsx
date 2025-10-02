@@ -4,7 +4,17 @@ import { Briefcase, CheckCircle2 } from "lucide-react";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Experience = () => {
-  const { data } = usePortfolio();
+  const { data, isLoading } = usePortfolio();
+
+  if (isLoading || !data?.experience) {
+    return (
+      <section id="experience" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">로딩 중...</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="experience" className="py-20">
       <div className="container mx-auto px-4">

@@ -27,8 +27,18 @@ interface Project {
 }
 
 export const Projects = () => {
-  const { data } = usePortfolio();
+  const { data, isLoading } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  if (isLoading || !data?.projects) {
+    return (
+      <section id="projects" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">로딩 중...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="projects" className="py-20">
@@ -70,9 +80,9 @@ export const Projects = () => {
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {project.tags.slice(0, 3).map((tag, idx) => (
+                  {project.technologies?.slice(0, 3).map((tech, idx) => (
                     <Badge key={idx} variant="secondary">
-                      {tag}
+                      {tech}
                     </Badge>
                   ))}
                 </div>

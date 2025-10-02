@@ -15,8 +15,18 @@ import { toast } from "sonner";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Contact = () => {
-  const { data } = usePortfolio();
+  const { data, isLoading } = usePortfolio();
   const [copiedEmail, setCopiedEmail] = useState(false);
+
+  if (isLoading || !data?.personal) {
+    return (
+      <section id="contact" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">로딩 중...</p>
+        </div>
+      </section>
+    );
+  }
   const { email, phone, location, github, linkedin, website } =
     data.personal;
 
@@ -141,7 +151,7 @@ export const Contact = () => {
 
       {/* Footer */}
       <div className="text-center mt-16 text-sm text-muted-foreground">
-        <p>© 2025 {portfolioData.personal.name}. All rights reserved.</p>
+        <p>© 2025 {data.personal.name}. All rights reserved.</p>
       </div>
     </section>
   );

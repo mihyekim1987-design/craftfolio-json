@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import portfolioDataJson from '@/data/portfolio.json';
+import { portfolioData } from '@/data/portfolioData';
 
 // 포트폴리오 데이터 타입 정의
 interface PortfolioData {
@@ -64,6 +64,8 @@ interface PortfolioContextType {
     data: PortfolioData;
     updateData: (newData: PortfolioData) => void;
     refreshData: () => void;
+    isLoading: boolean;
+    error: string | null;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
@@ -78,21 +80,35 @@ interface PortfolioProviderProps {
  * 관리자 모드에서 변경된 데이터를 실시간으로 반영
  */
 export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }) => {
-    const [data, setData] = useState<PortfolioData>(portfolioDataJson as PortfolioData);
+    const [data, setData] = useState<PortfolioData>(portfolioData as PortfolioData);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // localStorage에서 데이터 로드
     const loadDataFromStorage = () => {
         try {
+            setIsLoading(true);
+            setError(null);
+
             const savedData = localStorage.getItem('portfolio-data');
+
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
                 setData(parsedData);
+                setIsLoading(false);
                 return parsedData;
             }
+
+            // localStorage에 데이터가 없으면 기본 데이터 사용
+            setData(portfolioData as PortfolioData);
+            setIsLoading(false);
+            return portfolioData as PortfolioData;
         } catch (error) {
             console.error('Error loading data from localStorage:', error);
+            setError('데이터 로딩 중 오류가 발생했습니다.');
+            setData(portfolioData as PortfolioData); // 폴백 데이터
+            setIsLoading(false);
         }
-        return portfolioDataJson as PortfolioData;
     };
 
     // 컴포넌트 마운트 시 localStorage에서 데이터 로드
@@ -132,6 +148,8 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
         data,
         updateData,
         refreshData,
+        isLoading,
+        error,
     };
 
     return (

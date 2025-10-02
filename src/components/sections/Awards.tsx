@@ -18,7 +18,17 @@ const categoryConfig = {
 };
 
 export const Awards = () => {
-  const { data } = usePortfolio();
+  const { data, isLoading } = usePortfolio();
+
+  if (isLoading || !data?.awards) {
+    return (
+      <section id="awards" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">로딩 중...</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="awards" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">

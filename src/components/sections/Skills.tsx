@@ -3,7 +3,17 @@ import { Progress } from "@/components/ui/progress";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Skills = () => {
-  const { data } = usePortfolio();
+  const { data, isLoading } = usePortfolio();
+
+  if (isLoading || !data?.skills) {
+    return (
+      <section id="skills" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">로딩 중...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="skills" className="py-20 bg-muted/30">

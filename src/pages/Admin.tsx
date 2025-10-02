@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowLeft, Settings, Users, BarChart3, FileText, Plus, Edit, Trash2, Download, Upload, Save } from "lucide-react";
+import { ArrowLeft, Settings, Users, BarChart3, FileText, Plus, Edit, Trash2, Download, Upload, Save, Image as ImageIcon } from "lucide-react";
 import portfolioData from "@/data/portfolio.json";
 import { toast } from "@/hooks/use-toast";
 import { SkillsTab } from "@/components/admin/SkillsTab";
@@ -89,6 +89,9 @@ export const Admin = () => {
     const [editingItem, setEditingItem] = useState<Experience | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    // 파일 업로드를 위한 ref
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     // 저장 상태 관리 (실시간 저장으로 인해 단순화)
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
@@ -143,7 +146,7 @@ export const Admin = () => {
         reader.onload = (e) => {
             try {
                 const uploadedData = JSON.parse(e.target?.result as string);
-                setData(uploadedData);
+                updateData(uploadedData);
                 toast({
                     title: "업로드 완료",
                     description: "포트폴리오 데이터가 업데이트되었습니다.",
@@ -169,6 +172,48 @@ export const Admin = () => {
             }
         };
         updateData(updatedData);
+    };
+
+    // 프로필 이미지 업로드 핸들러
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // 파일 크기 체크 (5MB 제한)
+        if (file.size > 5 * 1024 * 1024) {
+            toast({
+                title: "파일 크기 오류",
+                description: "파일 크기는 5MB 이하여야 합니다.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        // 파일 타입 체크
+        if (!file.type.startsWith('image/')) {
+            toast({
+                title: "파일 타입 오류",
+                description: "이미지 파일만 업로드 가능합니다.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64String = e.target?.result as string;
+            handlePersonalUpdate('profileImage', base64String);
+            toast({
+                title: "업로드 완료",
+                description: "프로필 이미지가 업로드되었습니다."
+            });
+        };
+        reader.readAsDataURL(file);
+    };
+
+    // 파일 선택 트리거
+    const triggerFileUpload = () => {
+        fileInputRef.current?.click();
     };
 
     // 경력 아이템 추가
@@ -317,12 +362,59 @@ export const Admin = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <Label htmlFor="profileImage">프로필 이미지 URL</Label>
-                            <Input
-                                id="profileImage"
-                                value={data.personal.profileImage}
-                                onChange={(e) => handlePersonalUpdate('profileImage', e.target.value)}
-                            />
+                            <Label>프로필 이미지</Label>
+                            <div className="space-y-4">
+                                {/* 현재 이미지 미리보기 */}
+                                {data.personal.profileImage && (
+                                    <div className="flex items-center space-x-4">
+                                        <div className="relative">
+                                            <img
+                                                src={data.personal.profileImage}
+                                                alt="프로필 미리보기"
+                                                className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
+                                            />
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-sm text-muted-foreground">현재 프로필 이미지</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* 파일 업로드 버튼 */}
+                                <div className="flex space-x-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={triggerFileUpload}
+                                        className="flex items-center space-x-2"
+                                    >
+                                        <ImageIcon className="w-4 h-4" />
+                                        <span>이미지 업로드</span>
+                                    </Button>
+
+                                    {/* URL로 직접 입력하는 옵션도 유지 */}
+                                    <div className="flex-1">
+                                        <Input
+                                            placeholder="또는 이미지 URL을 직접 입력하세요"
+                                            value={data.personal.profileImage.startsWith('data:') ? '' : data.personal.profileImage}
+                                            onChange={(e) => handlePersonalUpdate('profileImage', e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* 숨겨진 파일 입력 */}
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    style={{ display: 'none' }}
+                                />
+
+                                <p className="text-xs text-muted-foreground">
+                                    지원 형식: JPG, PNG, GIF (최대 5MB)
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </CardContent>
@@ -337,7 +429,7 @@ export const Admin = () => {
                 <h3 className="text-lg font-semibold">경력 관리</h3>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button onClick={() => setEditingItem({ company: '', position: '', period: '', description: '', achievements: [] })}>
+                        <Button onClick={() => setEditingItem({ id: 0, company: '', position: '', period: '', description: '', achievements: [] })}>
                             <Plus className="h-4 w-4 mr-2" />
                             경력 추가
                         </Button>

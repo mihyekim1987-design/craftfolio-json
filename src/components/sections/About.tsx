@@ -3,7 +3,19 @@ import { Users, Briefcase, Award } from "lucide-react";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const About = () => {
-  const { data } = usePortfolio();
+  const { data, isLoading } = usePortfolio();
+
+  // 로딩 중이거나 데이터가 없을 때
+  if (isLoading || !data?.personal) {
+    return (
+      <section id="about" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">로딩 중...</p>
+        </div>
+      </section>
+    );
+  }
+
   const { name, bio, stats } = data.personal;
 
   const statItems = [

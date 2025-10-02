@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ExternalLink, Github } from "lucide-react";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 interface Project {
   id: number;
@@ -27,6 +27,7 @@ interface Project {
 }
 
 export const Projects = () => {
+  const { data } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
@@ -44,7 +45,7 @@ export const Projects = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {portfolioData.projects.map((project, index) => (
+          {data.projects.map((project, index) => (
             <Card
               key={project.id}
               className="overflow-hidden shadow-card hover:shadow-glow transition-smooth cursor-pointer group animate-scale-in"

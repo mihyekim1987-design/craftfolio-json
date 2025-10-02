@@ -1,8 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Skills = () => {
+  const { data } = usePortfolio();
+
   return (
     <section id="skills" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -19,7 +21,7 @@ export const Skills = () => {
 
           {/* Skills Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {portfolioData.skills.map((skillGroup, index) => (
+            {data.skills.map((skillGroup, index) => (
               <Card
                 key={index}
                 className="p-6 shadow-card hover:shadow-glow transition-smooth animate-scale-in"

@@ -12,12 +12,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Contact = () => {
+  const { data } = usePortfolio();
   const [copiedEmail, setCopiedEmail] = useState(false);
   const { email, phone, location, github, linkedin, website } =
-    portfolioData.personal;
+    data.personal;
 
   const copyEmail = () => {
     navigator.clipboard.writeText(email);

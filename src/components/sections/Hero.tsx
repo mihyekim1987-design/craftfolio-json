@@ -1,9 +1,10 @@
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Hero = () => {
-  const { name, title, tagline, profileImage } = portfolioData.personal;
+  const { data } = usePortfolio();
+  const { name, title, tagline, profileImage } = data.personal;
 
   return (
     <section

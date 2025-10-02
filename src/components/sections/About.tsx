@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Users, Briefcase, Award } from "lucide-react";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const About = () => {
-  const { name, bio, stats } = portfolioData.personal;
+  const { data } = usePortfolio();
+  const { name, bio, stats } = data.personal;
 
   const statItems = [
     { icon: Briefcase, label: "Years Experience", value: stats.experience },

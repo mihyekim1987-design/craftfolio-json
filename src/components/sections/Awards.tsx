@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Award, Trophy, GraduationCap } from "lucide-react";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 const categoryConfig = {
   award: { icon: Trophy, color: "text-yellow-500", bg: "bg-yellow-500/10" },
@@ -18,6 +18,7 @@ const categoryConfig = {
 };
 
 export const Awards = () => {
+  const { data } = usePortfolio();
   return (
     <section id="awards" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -34,10 +35,10 @@ export const Awards = () => {
 
           {/* Awards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {portfolioData.awards.map((award, index) => {
+            {data.awards.map((award, index) => {
               const config =
                 categoryConfig[
-                  award.category as keyof typeof categoryConfig
+                award.category as keyof typeof categoryConfig
                 ];
               const Icon = config.icon;
 

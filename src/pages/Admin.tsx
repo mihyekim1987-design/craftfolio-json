@@ -14,6 +14,7 @@ import { toast } from "@/hooks/use-toast";
 import { SkillsTab } from "@/components/admin/SkillsTab";
 import { ProjectsTab } from "@/components/admin/ProjectsTab";
 import { AwardsTab } from "@/components/admin/AwardsTab";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 // 타입 정의
 interface Experience {
@@ -83,14 +84,12 @@ interface PortfolioData {
  */
 export const Admin = () => {
     const navigate = useNavigate();
-    const [data, setData] = useState<PortfolioData>(portfolioData as PortfolioData);
+    const { data, updateData } = usePortfolio();
     const [activeTab, setActiveTab] = useState("personal");
     const [editingItem, setEditingItem] = useState<Experience | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    // 저장 상태 관리
-    const [hasChanges, setHasChanges] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    // 저장 상태 관리 (실시간 저장으로 인해 단순화)
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
     // 통계 상태
@@ -113,76 +112,10 @@ export const Admin = () => {
         navigate('/');
     };
 
-    // 초기 데이터 저장 (변경 감지 기준점)
-    const [initialData, setInitialData] = useState<PortfolioData>(portfolioData as PortfolioData);
-
-    // 데이터 변경 감지
+    // 실시간 저장 알림
     useEffect(() => {
-        const hasDataChanged = JSON.stringify(data) !== JSON.stringify(initialData);
-        setHasChanges(hasDataChanged);
-    }, [data, initialData]);
-
-    // 저장 기능
-    const handleSave = useCallback(async () => {
-        if (isSaving) return;
-
-        setIsSaving(true);
-
-        try {
-            // localStorage에 데이터 저장
-            localStorage.setItem('portfolio-data', JSON.stringify(data));
-
-            // 실제 환경에서는 API 호출로 서버에 저장
-            // await fetch('/api/portfolio', {
-            //   method: 'PUT',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify(data)
-            // });
-
-            // 저장 성공 시 초기 데이터 업데이트
-            setInitialData(data);
-            setHasChanges(false);
-            setLastSaved(new Date());
-
-            toast({
-                title: "저장 완료",
-                description: "포트폴리오 데이터가 저장되었습니다.",
-            });
-        } catch (error) {
-            console.error('Save error:', error);
-            toast({
-                title: "저장 실패",
-                description: "데이터 저장 중 오류가 발생했습니다.",
-                variant: "destructive",
-            });
-        } finally {
-            setIsSaving(false);
-        }
-    }, [data, isSaving]);
-
-    // 자동 저장 (5초마다)
-    useEffect(() => {
-        if (hasChanges && !isSaving) {
-            const autoSaveTimer = setTimeout(() => {
-                handleSave();
-            }, 5000);
-
-            return () => clearTimeout(autoSaveTimer);
-        }
-    }, [hasChanges, isSaving, handleSave]);
-
-    // 키보드 단축키 (Ctrl+S로 저장)
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                handleSave();
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [handleSave]);
+        setLastSaved(new Date());
+    }, [data]);
 
     // JSON 데이터 다운로드
     const handleDownloadData = () => {
@@ -228,13 +161,14 @@ export const Admin = () => {
 
     // 개인정보 수정
     const handlePersonalUpdate = (field: string, value: string) => {
-        setData(prev => ({
-            ...prev,
+        const updatedData = {
+            ...data,
             personal: {
-                ...prev.personal,
+                ...data.personal,
                 [field]: value
             }
-        }));
+        };
+        updateData(updatedData);
     };
 
     // 경력 아이템 추가
@@ -242,10 +176,11 @@ export const Admin = () => {
         const maxId = Math.max(...data.experience.map(item => item.id), 0);
         const itemWithId = { ...newItem, id: maxId + 1 };
 
-        setData(prev => ({
-            ...prev,
-            experience: [...prev.experience, itemWithId]
-        }));
+        const updatedData = {
+            ...data,
+            experience: [...data.experience, itemWithId]
+        };
+        updateData(updatedData);
 
         setIsDialogOpen(false);
         setEditingItem(null);
@@ -258,12 +193,13 @@ export const Admin = () => {
 
     // 경력 아이템 수정
     const handleUpdateExperience = (updatedItem: Experience) => {
-        setData(prev => ({
-            ...prev,
-            experience: prev.experience.map(item =>
+        const updatedData = {
+            ...data,
+            experience: data.experience.map(item =>
                 item.id === updatedItem.id ? updatedItem : item
             )
-        }));
+        };
+        updateData(updatedData);
 
         setIsDialogOpen(false);
         setEditingItem(null);
@@ -276,10 +212,11 @@ export const Admin = () => {
 
     // 경력 아이템 삭제
     const handleDeleteExperience = (id: number) => {
-        setData(prev => ({
-            ...prev,
-            experience: prev.experience.filter(item => item.id !== id)
-        }));
+        const updatedData = {
+            ...data,
+            experience: data.experience.filter(item => item.id !== id)
+        };
+        updateData(updatedData);
 
         toast({
             title: "삭제 완료",
@@ -532,29 +469,16 @@ export const Admin = () => {
                         <div>
                             <h1 className="text-3xl font-bold text-gradient">관리자 대시보드</h1>
                             <div className="flex items-center gap-2">
-                                <p className="text-muted-foreground">포트폴리오 데이터 관리</p>
-                                {hasChanges && (
-                                    <Badge variant="outline" className="text-orange-600 border-orange-600">
-                                        변경사항 있음
-                                    </Badge>
-                                )}
+                                <p className="text-muted-foreground">포트폴리오 데이터 관리 (실시간 저장)</p>
                                 {lastSaved && (
                                     <span className="text-xs text-muted-foreground">
-                                        마지막 저장: {lastSaved.toLocaleTimeString()}
+                                        마지막 업데이트: {lastSaved.toLocaleTimeString()}
                                     </span>
                                 )}
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Button
-                            onClick={handleSave}
-                            disabled={!hasChanges || isSaving}
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            <Save className="h-4 w-4 mr-2" />
-                            {isSaving ? "저장 중..." : "저장"}
-                        </Button>
                         <Button variant="outline" onClick={handleDownloadData}>
                             <Download className="h-4 w-4 mr-2" />
                             JSON 다운로드
@@ -638,21 +562,21 @@ export const Admin = () => {
                     <TabsContent value="skills">
                         <SkillsTab
                             skills={data.skills}
-                            onUpdate={(skills) => setData(prev => ({ ...prev, skills }))}
+                            onUpdate={(skills) => updateData({ ...data, skills })}
                         />
                     </TabsContent>
 
                     <TabsContent value="projects">
                         <ProjectsTab
                             projects={data.projects}
-                            onUpdate={(projects) => setData(prev => ({ ...prev, projects }))}
+                            onUpdate={(projects) => updateData({ ...data, projects })}
                         />
                     </TabsContent>
 
                     <TabsContent value="awards">
                         <AwardsTab
                             awards={data.awards}
-                            onUpdate={(awards) => setData(prev => ({ ...prev, awards }))}
+                            onUpdate={(awards) => updateData({ ...data, awards })}
                         />
                     </TabsContent>
                 </Tabs>

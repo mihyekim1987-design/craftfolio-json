@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase, CheckCircle2 } from "lucide-react";
-import portfolioData from "@/data/portfolio.json";
+import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Experience = () => {
+  const { data } = usePortfolio();
   return (
     <section id="experience" className="py-20">
       <div className="container mx-auto px-4">
@@ -24,7 +25,7 @@ export const Experience = () => {
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary to-accent hidden md:block" />
 
             <div className="space-y-8">
-              {portfolioData.experience.map((exp, index) => (
+              {data.experience.map((exp, index) => (
                 <div
                   key={exp.id}
                   className="relative animate-slide-up"

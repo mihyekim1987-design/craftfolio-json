@@ -30,12 +30,12 @@ export const Skills = () => {
                 </h3>
                 <div className="space-y-4">
                   {skillGroup.items.map((skill, idx) => (
-                    <div key={idx}>
+                    <div key={idx} className="group">
                       <div className="flex justify-between mb-2">
-                        <span className="text-sm font-medium">
+                        <span className="text-sm font-medium group-hover:text-purple-600 transition-colors duration-300">
                           {skill.name}
                         </span>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-muted-foreground group-hover:text-purple-500 transition-colors duration-300">
                           {skill.level}%
                         </span>
                       </div>

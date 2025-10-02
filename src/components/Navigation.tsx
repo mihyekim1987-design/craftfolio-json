@@ -70,27 +70,9 @@ export const Navigation = () => {
 
     // 5번 클릭 시 관리자 모드 진입
     if (newCount === 5) {
-      toast({
-        title: "🎉 관리자 모드 활성화!",
-        description: "관리자 페이지로 이동합니다...",
-        duration: 2000,
-      });
-
-      setTimeout(() => {
-        navigate('/admin');
-      }, 1000);
-
+      navigate('/admin');
       setLogoClickCount(0);
       return;
-    }
-
-    // 진행 상황 알림
-    if (newCount >= 3) {
-      toast({
-        title: `${newCount}/5 클릭`,
-        description: `관리자 모드까지 ${5 - newCount}번 더 클릭하세요`,
-        duration: 1500,
-      });
     }
 
     // 3초 후 카운트 리셋

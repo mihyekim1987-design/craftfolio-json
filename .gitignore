@@ -7,12 +7,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# 의존성 디렉토리
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# 환경 변수 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 에디터 설정
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +30,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# 빌드 결과물
+build/
+dist/
+
+# 배포 관련
+.gh-pages/
+
+# 기타
+.cursor/

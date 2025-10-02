@@ -1,73 +1,138 @@
-# Welcome to your Lovable project
+# 🎨 Craftfolio - 개인 포트폴리오
 
-## Project info
+React + TypeScript + Vite로 제작된 개인 포트폴리오 웹사이트입니다.
 
-**URL**: https://lovable.dev/projects/1327930b-f792-4ee0-ab02-df0aa37b5cb0
+## 🚀 기술 스택
 
-## How can I edit this code?
+- **Frontend**: React 18, TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS, shadcn/ui
+- **Deployment**: GitHub Actions + GitHub Pages
+- **Package Manager**: npm
 
-There are several ways of editing your application.
+## 📦 설치 및 실행
 
-**Use Lovable**
+### 로컬 개발 환경
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/1327930b-f792-4ee0-ab02-df0aa37b5cb0) and start prompting.
+```bash
+# 저장소 클론
+git clone https://github.com/[username]/craftfolio-json.git
+cd craftfolio-json
 
-Changes made via Lovable will be committed automatically to this repo.
+# 의존성 설치
+npm install
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 개발 서버 실행
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### 빌드
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+# 개발용 빌드
+npm run build:dev
 
-**Use GitHub Codespaces**
+# 프로덕션 빌드
+npm run build:prod
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# 빌드 결과 미리보기
+npm run preview
+```
 
-## What technologies are used for this project?
+## 🔧 배포 설정
 
-This project is built with:
+### GitHub Pages 자동 배포
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. **GitHub Pages 활성화**
+   - GitHub 저장소 → Settings → Pages
+   - Source: "GitHub Actions" 선택
 
-## How can I deploy this project?
+2. **자동 배포 트리거**
+   - `main` 브랜치에 push 시 자동 배포
+   - 수동 배포: Actions 탭에서 "Deploy Portfolio" 워크플로우 실행
 
-Simply open [Lovable](https://lovable.dev/projects/1327930b-f792-4ee0-ab02-df0aa37b5cb0) and click on Share -> Publish.
+### 배포 URL
 
-## Can I connect a custom domain to my Lovable project?
+배포된 사이트는 다음 URL에서 확인할 수 있습니다:
+`https://[username].github.io/craftfolio-json/`
 
-Yes, you can!
+## 📁 프로젝트 구조
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+craftfolio-json/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions 배포 워크플로우
+├── public/                     # 정적 파일
+├── src/
+│   ├── components/            # React 컴포넌트
+│   │   ├── sections/         # 섹션별 컴포넌트
+│   │   └── ui/              # UI 컴포넌트 (shadcn/ui)
+│   ├── data/
+│   │   └── portfolio.json    # 포트폴리오 데이터
+│   ├── hooks/               # 커스텀 훅
+│   ├── lib/                 # 유틸리티 함수
+│   └── pages/               # 페이지 컴포넌트
+├── .env.example             # 환경 변수 예시
+├── vite.config.ts          # Vite 설정
+└── package.json            # 프로젝트 설정
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🛠️ 개발 가이드
+
+### 환경 변수 설정
+
+```bash
+# .env.example을 복사하여 .env 파일 생성
+cp .env.example .env
+
+# 필요한 환경 변수 설정
+VITE_NODE_ENV=development
+```
+
+### 코드 품질 관리
+
+```bash
+# ESLint 검사
+npm run lint
+
+# 배포 전 검사 (자동 실행)
+npm run predeploy
+```
+
+### 포트폴리오 데이터 수정
+
+`src/data/portfolio.json` 파일을 수정하여 개인 정보를 업데이트하세요.
+
+## 📋 배포 체크리스트
+
+- [ ] GitHub 저장소 생성 및 코드 push
+- [ ] GitHub Pages 활성화 (Settings → Pages → Source: GitHub Actions)
+- [ ] `vite.config.ts`의 base 경로 확인 (저장소명과 일치)
+- [ ] 포트폴리오 데이터 업데이트 (`src/data/portfolio.json`)
+- [ ] 첫 배포 후 URL 확인
+
+## 🔄 배포 프로세스
+
+1. **코드 변경 및 커밋**
+   ```bash
+   git add .
+   git commit -m "feat: 포트폴리오 내용 업데이트"
+   git push origin main
+   ```
+
+2. **자동 배포 실행**
+   - GitHub Actions가 자동으로 빌드 및 배포 실행
+   - Actions 탭에서 진행 상황 확인 가능
+
+3. **배포 완료 확인**
+   - 배포 URL에서 변경사항 확인
+   - 약 1-2분 소요
+
+## 📞 문의
+
+프로젝트 관련 문의사항이 있으시면 이슈를 생성해 주세요.
+
+---
+
+⭐ 이 프로젝트가 도움이 되었다면 스타를 눌러주세요!

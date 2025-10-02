@@ -1,25 +1,45 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio - Full Stack Developer</title>
-    <meta name="description" content="Modern portfolio showcasing full stack development projects, skills, and professional experience" />
-    <meta name="author" content="Portfolio Developer" />
-    <meta name="keywords" content="portfolio, web developer, full stack, react, typescript" />
 
-    <meta property="og:title" content="Portfolio - Full Stack Developer" />
-    <meta property="og:description" content="Modern portfolio showcasing full stack development projects, skills, and professional experience" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio - Full Stack Developer</title>
+  <meta name="description"
+    content="Modern portfolio showcasing full stack development projects, skills, and professional experience" />
+  <meta name="author" content="Portfolio Developer" />
+  <meta name="keywords" content="portfolio, web developer, full stack, react, typescript" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+  <meta property="og:title" content="Portfolio - Full Stack Developer" />
+  <meta property="og:description"
+    content="Modern portfolio showcasing full stack development projects, skills, and professional experience" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lovable_dev" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- GitHub Pages SPA 라우팅 지원 스크립트 -->
+  <script type="text/javascript">
+    // GitHub Pages SPA 해킹: 404.html에서 리다이렉트된 경우 처리
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location))
+  </script>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

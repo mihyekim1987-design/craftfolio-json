@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -113,43 +113,19 @@ export const Admin = () => {
         navigate('/');
     };
 
-    // 데이터 변경 감지 (초기 로드 제외)
+    // 초기 데이터 저장 (변경 감지 기준점)
+    const [initialData, setInitialData] = useState<PortfolioData>(portfolioData as PortfolioData);
+
+    // 데이터 변경 감지
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setHasChanges(true);
-        }, 100); // 초기 로드 후 100ms 뒤부터 변경 감지
-
-        return () => clearTimeout(timer);
-    }, [data]);
-
-    // 키보드 단축키 (Ctrl+S로 저장)
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                if (hasChanges && !isSaving) {
-                    handleSave();
-                }
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [hasChanges, isSaving]);
-
-    // 자동 저장 (5초마다)
-    useEffect(() => {
-        if (hasChanges) {
-            const autoSaveTimer = setTimeout(() => {
-                handleSave();
-            }, 5000);
-
-            return () => clearTimeout(autoSaveTimer);
-        }
-    }, [hasChanges, data]);
+        const hasDataChanged = JSON.stringify(data) !== JSON.stringify(initialData);
+        setHasChanges(hasDataChanged);
+    }, [data, initialData]);
 
     // 저장 기능
-    const handleSave = async () => {
+    const handleSave = useCallback(async () => {
+        if (isSaving) return;
+
         setIsSaving(true);
 
         try {
@@ -163,6 +139,8 @@ export const Admin = () => {
             //   body: JSON.stringify(data)
             // });
 
+            // 저장 성공 시 초기 데이터 업데이트
+            setInitialData(data);
             setHasChanges(false);
             setLastSaved(new Date());
 
@@ -171,6 +149,7 @@ export const Admin = () => {
                 description: "포트폴리오 데이터가 저장되었습니다.",
             });
         } catch (error) {
+            console.error('Save error:', error);
             toast({
                 title: "저장 실패",
                 description: "데이터 저장 중 오류가 발생했습니다.",
@@ -179,7 +158,31 @@ export const Admin = () => {
         } finally {
             setIsSaving(false);
         }
-    };
+    }, [data, isSaving]);
+
+    // 자동 저장 (5초마다)
+    useEffect(() => {
+        if (hasChanges && !isSaving) {
+            const autoSaveTimer = setTimeout(() => {
+                handleSave();
+            }, 5000);
+
+            return () => clearTimeout(autoSaveTimer);
+        }
+    }, [hasChanges, isSaving, handleSave]);
+
+    // 키보드 단축키 (Ctrl+S로 저장)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                handleSave();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [handleSave]);
 
     // JSON 데이터 다운로드
     const handleDownloadData = () => {

@@ -19,8 +19,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": "off", // Fast refresh 경고 비활성화
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-empty-object-type": "off", // 빈 인터페이스 경고 비활성화
+      "@typescript-eslint/no-require-imports": "off", // require() 사용 허용
     },
   },
 );

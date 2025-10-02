@@ -111,8 +111,8 @@ export const Navigation = () => {
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled
-          ? "bg-background/80 backdrop-blur-md shadow-card"
-          : "bg-transparent"
+        ? "bg-background/80 backdrop-blur-md shadow-card"
+        : "bg-transparent"
         }`}
     >
       <div className="container mx-auto px-4 py-4">
@@ -123,11 +123,6 @@ export const Navigation = () => {
             title="로고를 5번 클릭하면 관리자 모드에 진입합니다"
           >
             Portfolio
-            {logoClickCount > 0 && (
-              <span className="ml-2 text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full animate-pulse">
-                {logoClickCount}/5
-              </span>
-            )}
           </button>
 
           {/* Desktop Navigation */}
@@ -137,8 +132,8 @@ export const Navigation = () => {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition-smooth hover:text-primary ${activeSection === item.href.substring(1)
-                    ? "text-primary"
-                    : "text-foreground/70"
+                  ? "text-primary"
+                  : "text-foreground/70"
                   }`}
               >
                 {item.label}
@@ -190,8 +185,8 @@ export const Navigation = () => {
                 href={item.href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`block py-2 text-sm font-medium transition-smooth hover:text-primary ${activeSection === item.href.substring(1)
-                    ? "text-primary"
-                    : "text-foreground/70"
+                  ? "text-primary"
+                  : "text-foreground/70"
                   }`}
               >
                 {item.label}

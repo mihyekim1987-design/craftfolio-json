@@ -14,8 +14,7 @@ import { toast } from "@/hooks/use-toast";
 import { SkillsTab } from "@/components/admin/SkillsTab";
 import { ProjectsTab } from "@/components/admin/ProjectsTab";
 import { AwardsTab } from "@/components/admin/AwardsTab";
-import { usePortfolio } from "@/contexts/PortfolioContext";
-
+import { usePortfolio, PortfolioData } from "@/contexts/PortfolioContext";
 
 // 타입 정의
 interface Experience {
@@ -25,57 +24,6 @@ interface Experience {
     period: string;
     description: string;
     achievements: string[];
-}
-
-interface PortfolioData {
-    personal: {
-        name: string;
-        title: string;
-        tagline: string;
-        bio: string;
-        location: string;
-        email: string;
-        phone: string;
-        github: string;
-        linkedin: string;
-        website: string;
-        profileImage: string;
-        stats: {
-            experience: string;
-            projects: string;
-            clients: string;
-        };
-    };
-    experience: Experience[];
-    skills: Array<{
-        category: string;
-        items: Array<{
-            name: string;
-            level: number;
-        }>;
-    }>;
-    projects: Array<{
-        id: number;
-        title: string;
-        description: string;
-        image: string;
-        tags: string[];
-        tech: string[];
-        contribution: string;
-        impact: string;
-        links: {
-            demo?: string;
-            github?: string;
-        };
-    }>;
-    awards: Array<{
-        id: number;
-        title: string;
-        period: string;
-        institution: string;
-        category: 'award' | 'certification' | 'training';
-        details: string;
-    }>;
 }
 
 /**
@@ -88,6 +36,9 @@ export const Admin = () => {
     
     // usePortfolio 훅 사용 - React 규칙에 따라 직접 호출
     const { data, updateData, refreshData, isLoading, error } = usePortfolio();
+    
+    // 디버깅을 위한 로그
+    console.log('Admin component render:', { data: !!data, isLoading, error });
     
     // 🔒 안전 가드 — data.* 접근 전에 필수
     if (isLoading) {

@@ -50,8 +50,13 @@ export interface PortfolioData {
         tech: string[];
         contribution: string;
         impact: string;
-        links: {
+        links?: {
             demo?: string;
+            github?: string;
+            PPT?: string;
+            Colab?: string;
+        };
+        link?: {
             github?: string;
         };
     }>;
@@ -100,6 +105,8 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             setError(null);
             const buildId =
                 process.env.NEXT_PUBLIC_BUILD_ID || Date.now().toString();
+            
+            console.log('PortfolioContext: Starting data fetch...');
 
             // 👇 추가: basePath 계산 헬퍼
             const getBasePath = () => {
@@ -146,10 +153,21 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
 
             const json = await res.json();
             console.log("Portfolio data loaded successfully:", Object.keys(json));
+            
+            // 데이터 유효성 검사
+            if (!json || typeof json !== 'object') {
+                throw new Error('Invalid portfolio data format');
+            }
+            
             setData(json);
 
             // 로컬 백업 (옵션)
-            localStorage.setItem("portfolio-data", JSON.stringify(json));
+            try {
+                localStorage.setItem("portfolio-data", JSON.stringify(json));
+                console.log('Data saved to localStorage');
+            } catch (storageError) {
+                console.warn('Failed to save to localStorage:', storageError);
+            }
         } catch (err) {
             console.error("Error loading portfolio.json:", err);
 

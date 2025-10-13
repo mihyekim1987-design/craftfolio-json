@@ -4,6 +4,7 @@ name: Deploy Portfolio
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:  # 수동 실행 가능하도록 추가
   
 # GitHub Pages 배포에 필요한 권한 설정
 permissions:
@@ -18,12 +19,15 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # 타임아웃 설정 추가
     environment: github-pages  # GitHub Pages 환경 설정
     
     steps:
     # 소스 코드 체크아웃
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 전체 히스토리 가져오기
     
     # Node.js 환경 설정
     - name: Setup Node.js
@@ -31,14 +35,28 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
+        cache-dependency-path: 'package-lock.json'
     
     # 의존성 설치
     - name: Install dependencies
-      run: npm ci
+      run: |
+        echo "의존성 설치 시작..."
+        npm ci --prefer-offline --no-audit
+        echo "의존성 설치 완료"
+    
+    # 포트폴리오 데이터 동기화
+    - name: Sync portfolio data
+      run: |
+        echo "포트폴리오 데이터 동기화 시작..."
+        npm run sync
+        echo "포트폴리오 데이터 동기화 완료"
     
     # 프로젝트 빌드
     - name: Build project
-      run: npm run build
+      run: |
+        echo "프로젝트 빌드 시작..."
+        npm run build
+        echo "프로젝트 빌드 완료"
       env:
         NEXT_PUBLIC_BUILD_ID: ${{ github.sha }}
         NEXT_PUBLIC_BASE_PATH: /craftfolio.json
@@ -50,15 +68,15 @@ jobs:
         ls -la dist/
         echo "index.html 파일 확인:"
         test -f dist/index.html && echo "✅ index.html 파일 존재" || echo "❌ index.html 파일 없음"
+        echo "portfolio.json 파일 확인:"
+        test -f dist/portfolio.json && echo "✅ portfolio.json 파일 존재" || echo "❌ portfolio.json 파일 없음"
     
     # GitHub Pages 업로드
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v3
-      if: github.ref == 'refs/heads/main'
       with:
         path: ./dist
     
     # GitHub Pages에 배포
     - name: Deploy to GitHub Pages
       uses: actions/deploy-pages@v4
-      if: github.ref == 'refs/heads/main'

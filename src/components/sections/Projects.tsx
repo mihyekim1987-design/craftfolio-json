@@ -20,8 +20,13 @@ interface Project {
   tech: string[];
   contribution: string;
   impact: string;
-  links: {
+  links?: {
     demo?: string;
+    github?: string;
+    PPT?: string;
+    Colab?: string;
+  };
+  link?: {
     github?: string;
   };
 }
@@ -139,7 +144,8 @@ export const Projects = () => {
                     </p>
                   </div>
                   <div className="flex gap-3 pt-4">
-                    {selectedProject.links.demo && (
+                    {/* links 구조 지원 */}
+                    {selectedProject.links?.demo && (
                       <Button asChild className="gradient-primary">
                         <a
                           href={selectedProject.links.demo}
@@ -151,10 +157,48 @@ export const Projects = () => {
                         </a>
                       </Button>
                     )}
-                    {selectedProject.links.github && (
+                    {selectedProject.links?.github && (
                       <Button variant="outline" asChild>
                         <a
                           href={selectedProject.links.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Github className="h-4 w-4 mr-2" />
+                          Source Code
+                        </a>
+                      </Button>
+                    )}
+                    {selectedProject.links?.PPT && (
+                      <Button variant="outline" asChild>
+                        <a
+                          href={selectedProject.links.PPT}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          PPT
+                        </a>
+                      </Button>
+                    )}
+                    {selectedProject.links?.Colab && (
+                      <Button variant="outline" asChild>
+                        <a
+                          href={selectedProject.links.Colab}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Colab
+                        </a>
+                      </Button>
+                    )}
+                    
+                    {/* link 구조 지원 (두 번째 프로젝트용) */}
+                    {selectedProject.link?.github && (
+                      <Button variant="outline" asChild>
+                        <a
+                          href={selectedProject.link.github}
                           target="_blank"
                           rel="noopener noreferrer"
                         >

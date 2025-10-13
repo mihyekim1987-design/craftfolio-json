@@ -1,20 +1,27 @@
 name: Deploy Portfolio
 
-# main 브랜치에 push될 때 실행
+# main 브랜치에 push될 때 자동으로 배포 실행
 on:
   push:
     branches: [ main ]
+  
+# GitHub Pages 권한 설정 (Settings > Actions > General > Workflow permissions)
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: github-pages  # GitHub Pages 환경 설정
     
     steps:
     # 소스 코드 체크아웃
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     
     # Node.js 환경 설정
     - name: Setup Node.js
@@ -36,6 +43,9 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         publish_dir: ./dist
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'feat: 포트폴리오 사이트 자동 배포'
         cname: # 커스텀 도메인이 있다면 여기에 입력

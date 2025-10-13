@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,20 @@ interface Project {
 export const Projects = () => {
   const { data } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // 모달이 열릴 때 배경 스크롤 방지
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // 컴포넌트 언마운트 시 스크롤 복원
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedProject]);
 
   if (!data?.projects) {
     return (
@@ -101,7 +115,7 @@ export const Projects = () => {
           open={!!selectedProject}
           onOpenChange={() => setSelectedProject(null)}
         >
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto z-50">
             {selectedProject && (
               <>
                 <DialogHeader>

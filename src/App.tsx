@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import { PortfolioProvider } from "./contexts/PortfolioContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,11 @@ const App = () => (
         <BrowserRouter basename={basename}>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={
+              <ErrorBoundary>
+                <Admin />
+              </ErrorBoundary>
+            } />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

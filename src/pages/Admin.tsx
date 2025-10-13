@@ -86,8 +86,33 @@ interface PortfolioData {
 export const Admin = () => {
     const navigate = useNavigate();
     
-    // usePortfolio 훅 사용
-    const { data, updateData, refreshData, isLoading, error } = usePortfolio();
+    // usePortfolio 훅 사용 - 안전한 에러 처리
+    let data, updateData, refreshData, isLoading, error;
+    
+    try {
+        const portfolioData = usePortfolio();
+        data = portfolioData.data;
+        updateData = portfolioData.updateData;
+        refreshData = portfolioData.refreshData;
+        isLoading = portfolioData.isLoading;
+        error = portfolioData.error;
+    } catch (hookError) {
+        console.error('usePortfolio hook error:', hookError);
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <div className="text-center">
+                    <div className="text-destructive text-lg mb-4">❌ 훅 오류</div>
+                    <p className="text-muted-foreground mb-4">포트폴리오 데이터를 불러오는 중 오류가 발생했습니다.</p>
+                    <button 
+                        onClick={() => window.location.reload()}
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                    >
+                        페이지 새로고침
+                    </button>
+                </div>
+            </div>
+        );
+    }
     
     // 🔒 안전 가드 — data.* 접근 전에 필수
     if (isLoading) {

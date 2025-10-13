@@ -132,24 +132,26 @@
     {
       "id": 1,
       "title": "AI 기반 콘텐츠 관리 시스템",
-      "description": "인공지능을 활용한 자동 태깅 및 분류 시스템이 포함된 CMS 플랫폼",
+      "description": "주요 도시 기온.습도 폭염 지역 분석 (2025.09.11~09.12) 목적: “최근 기후 변화 속에서 도시별 기온·습도 특징 파악”, 부제: 2000~2025 기상 데이터 기반 3조 : 김미혜, 신용호, 임진호, 장경수, 최경규"
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
       "tags": [
-        "React",
-        "TypeScript",
-        "OpenAI",
-        "Node.js"
+        "Colab",
+        "Python",
+        "Pandas",
+        "Seaborn",
+        "Metaplotlib"
       ],
       "tech": [
-        "React 18",
-        "TypeScript",
-        "Tailwind CSS",
-        "OpenAI API",
-        "Express",
-        "PostgreSQL"
+        "Colab",
+        "Python",
+        "Pandas",
+        "Seaborn",
+        "Metaplotlib",
+        "Gemini",
+        "ChatGPT" 
       ],
-      "contribution": "프론트엔드 아키텍처 설계 및 AI 통합 개발",
-      "impact": "콘텐츠 분류 시간 70% 단축, 정확도 95% 달성",
+      "contribution": "자료 수집 정제 / 팀장, PPT 발표",
+      "impact": "결측치 처리 방법 제시 지역별 최고 기온 비교 폭염 지역 Top 5 도출 분석 도구: Google Colab, Python (pandas, matplotlib, seaborn)",
       "links": {
         "demo": "https://demo.example.com",
         "github": "https://github.com/example/project1"
@@ -158,77 +160,58 @@
     {
       "id": 2,
       "title": "실시간 협업 도구",
-      "description": "WebSocket 기반 실시간 협업 및 화이트보드 기능을 제공하는 웹 애플리케이션",
+      "description": "Github Team Project - fizzbuzz project",
       "image": "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=600&h=400&fit=crop",
       "tags": [
-        "React",
-        "WebSocket",
-        "Canvas",
-        "Redis"
+        "Git Bash",
+        "Vim",
+        "Github"
       ],
       "tech": [
-        "React",
-        "Socket.io",
-        "Canvas API",
-        "Node.js",
-        "Redis",
-        "Docker"
+        "Git Bash",
+        "Vim",
+        "Github"
       ],
-      "contribution": "실시간 동기화 시스템 설계 및 Canvas 기반 드로잉 기능 구현",
-      "impact": "동시 접속자 1000명+ 안정적 처리",
+      "contribution": "팀장, Organazation 세팅 및 관리",
+      "impact": "Organization을 만들어 하나의 repo에서 수행 GitHub 세팅 각 팀원들이 clone하여 작업 확인 및 병합",
       "links": {
-        "demo": "https://demo.example.com",
-        "github": "https://github.com/example/project2"
+        "demo": ,
+        "github": "https://github.com/fc-fb-1/fizzbuzz-for-team"
       }
     },
     {
       "id": 3,
-      "title": "모던 이커머스 플랫폼",
-      "description": "Next.js 기반의 고성능 온라인 쇼핑몰 플랫폼",
-      "image": "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600&h=400&fit=crop",
+      "title": "",
+      "description": "",
+      "image": "",
       "tags": [
-        "Next.js",
-        "Stripe",
-        "Prisma",
-        "PostgreSQL"
+        
       ],
       "tech": [
-        "Next.js 14",
-        "TypeScript",
-        "Stripe",
-        "Prisma",
-        "PostgreSQL",
-        "Vercel"
+        
       ],
-      "contribution": "풀스택 개발 및 결제 시스템 통합",
-      "impact": "페이지 로딩 속도 60% 개선, 전환율 25% 증가",
+      "contribution": "",
+      "impact": "",
       "links": {
-        "demo": "https://demo.example.com",
-        "github": "https://github.com/example/project3"
+        "demo": "h",
+        "github": ""
       }
     },
     {
       "id": 4,
-      "title": "개발자 커뮤니티 플랫폼",
-      "description": "개발자들을 위한 지식 공유 및 네트워킹 플랫폼",
-      "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop",
+      "title": "",
+      "description": "",
+      "image": "",
       "tags": [
-        "React",
-        "Firebase",
-        "Material-UI",
-        "Algolia"
+       
       ],
       "tech": [
-        "React",
-        "Firebase",
-        "Material-UI",
-        "Algolia",
-        "Cloud Functions"
+       
       ],
-      "contribution": "프론트엔드 개발 및 검색 기능 최적화",
-      "impact": "월간 활성 사용자 5000명+ 달성",
+      "contribution": "",
+      "impact": "",
       "links": {
-        "demo": "https://demo.example.com"
+        "demo": ""
       }
     }
   ],

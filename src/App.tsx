@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
+import AdminSimple from "./pages/AdminSimple";
 import NotFound from "./pages/NotFound";
 import { PortfolioProvider } from "./contexts/PortfolioContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -25,7 +26,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={
               <ErrorBoundary>
-                <Admin />
+                <AdminSimple />
               </ErrorBoundary>
             } />
             <Route path="*" element={<NotFound />} />

@@ -101,8 +101,21 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             const buildId =
                 process.env.NEXT_PUBLIC_BUILD_ID || Date.now().toString();
 
+            // 👇 추가: basePath 계산 헬퍼
+            const getBasePath = () => {
+            // Actions에서 주입했으면 그 값을 우선 사용
+            if (process.env.NEXT_PUBLIC_BASE_PATH) return process.env.NEXT_PUBLIC_BASE_PATH;
+            // 브라우저 경로에서 /REPO_NAME 추론
+            if (typeof window !== "undefined") {
+            const seg = window.location.pathname.split("/")[1];
+            return seg ? `/${seg}` : "";
+            }
+            return "";
+           };
+           const base = getBasePath();
+
             // ✅ portfolio.json fetch (캐시 무효화 쿼리 포함)
-            const res = await fetch(`/data/portfolio.json?v=${buildId}`, {
+            const res = await fetch(`${base}/data/portfolio.json?v=${buildId}`, {
                 cache: "no-store",
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);

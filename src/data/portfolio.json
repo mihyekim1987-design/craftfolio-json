@@ -150,8 +150,8 @@
         "ChatGPT",
         "Gemini"
       ],
-      "contribution": "팀장,자료 정제, PPT 발표",
-      "impact": "기상 데이터 수집과 정제,결측치 처리 방법 제시, 폭염 분석 및 주요 시사점 확인, 한국지도 시각화, 히트맵",
+      "contribution": "팀장\n자료 정제\nPPT 발표",
+      "impact": "기상 데이터 수집과 정제\n결측치 처리 방법 제시\n폭염 분석 및 주요 시사점 확인\n한국지도 시각화\n히트맵",
       "links": {
         "PPT": "https://gemini.google.com/share/ac6e7e6841e2",
         "Colab": "https://colab.research.google.com/drive/12g9fUhAXHI8wN1Dm74zbvu0nPMFbFlRi"
@@ -173,7 +173,7 @@
         "Github"
       ],
       "contribution": "팀장",
-      "impact": "새로운 하나의 repo에서 진행, Organization 세팅 및 관리",
+      "impact": "새로운 하나의 repo에서 진행\nOrganization 세팅 및 관리",
       "link": {
         "github": "https://github.com/fc-fb-1/fizzbuzz-for-team"
       }

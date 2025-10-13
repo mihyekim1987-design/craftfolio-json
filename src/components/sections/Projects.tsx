@@ -117,7 +117,7 @@ export const Projects = () => {
                   />
                   <div>
                     <h4 className="font-semibold mb-2">Description</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-line">
                       {selectedProject.description}
                     </p>
                   </div>
@@ -133,13 +133,13 @@ export const Projects = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">My Contribution</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-line">
                       {selectedProject.contribution}
                     </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Impact & Results</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-line">
                       {selectedProject.impact}
                     </p>
                   </div>

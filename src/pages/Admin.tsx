@@ -86,10 +86,52 @@ interface PortfolioData {
 export const Admin = () => {
     const navigate = useNavigate();
     const { data, updateData, refreshData, isLoading, error } = usePortfolio();
+    
     // 🔒 안전 가드 — data.* 접근 전에 필수
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
-    if (!data) return <div>No data</div>;
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-muted-foreground">데이터를 불러오는 중...</p>
+                </div>
+            </div>
+        );
+    }
+    
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-destructive text-lg mb-4">❌ 오류 발생</div>
+                    <p className="text-muted-foreground mb-4">{error}</p>
+                    <button 
+                        onClick={refreshData}
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                    >
+                        다시 시도
+                    </button>
+                </div>
+            </div>
+        );
+    }
+    
+    if (!data) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-muted-foreground text-lg mb-4">📄 데이터 없음</div>
+                    <p className="text-muted-foreground mb-4">포트폴리오 데이터를 찾을 수 없습니다.</p>
+                    <button 
+                        onClick={refreshData}
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                    >
+                        새로고침
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     const [activeTab, setActiveTab] = useState("personal");
     const [editingItem, setEditingItem] = useState<Experience | null>(null);

@@ -628,7 +628,7 @@ export const Admin = () => {
 
                     <TabsContent value="projects">
                         <ProjectsTab
-                            projects={data.projects}
+                            projects={data.projects || []}
                             onUpdate={(projects) => updateData({ ...data, projects })}
                         />
                     </TabsContent>

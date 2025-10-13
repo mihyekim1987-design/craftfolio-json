@@ -19,8 +19,13 @@ interface Project {
     tech: string[];
     contribution: string;
     impact: string;
-    links: {
+    links?: {
         demo?: string;
+        github?: string;
+        PPT?: string;
+        Colab?: string;
+    };
+    link?: {
         github?: string;
     };
 }
@@ -33,6 +38,17 @@ interface ProjectsTabProps {
 export const ProjectsTab = ({ projects, onUpdate }: ProjectsTabProps) => {
     const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // 안전한 데이터 검증
+    if (!projects || !Array.isArray(projects)) {
+        return (
+            <div className="space-y-6">
+                <div className="text-center py-8">
+                    <p className="text-muted-foreground">프로젝트 데이터를 불러올 수 없습니다.</p>
+                </div>
+            </div>
+        );
+    }
 
     // 프로젝트 추가/수정
     const handleSubmit = () => {
@@ -254,18 +270,18 @@ export const ProjectsTab = ({ projects, onUpdate }: ProjectsTabProps) => {
                                         <div>
                                             <h4 className="font-semibold mb-2">태그</h4>
                                             <div className="flex flex-wrap gap-2">
-                                                {project.tags.map((tag, index) => (
+                                                {project.tags?.map((tag, index) => (
                                                     <Badge key={index} variant="secondary">{tag}</Badge>
-                                                ))}
+                                                )) || <span className="text-muted-foreground text-sm">태그 없음</span>}
                                             </div>
                                         </div>
 
                                         <div>
                                             <h4 className="font-semibold mb-2">기술 스택</h4>
                                             <div className="flex flex-wrap gap-2">
-                                                {project.tech.map((tech, index) => (
+                                                {project.tech?.map((tech, index) => (
                                                     <Badge key={index} variant="outline">{tech}</Badge>
-                                                ))}
+                                                )) || <span className="text-muted-foreground text-sm">기술 스택 없음</span>}
                                             </div>
                                         </div>
 
@@ -280,7 +296,7 @@ export const ProjectsTab = ({ projects, onUpdate }: ProjectsTabProps) => {
                                         </div>
 
                                         <div className="flex gap-2">
-                                            {project.links.demo && (
+                                            {project.links?.demo && (
                                                 <Button variant="outline" size="sm" asChild>
                                                     <a href={project.links.demo} target="_blank" rel="noopener noreferrer">
                                                         <ExternalLink className="h-3 w-3 mr-1" />
@@ -288,7 +304,7 @@ export const ProjectsTab = ({ projects, onUpdate }: ProjectsTabProps) => {
                                                     </a>
                                                 </Button>
                                             )}
-                                            {project.links.github && (
+                                            {project.links?.github && (
                                                 <Button variant="outline" size="sm" asChild>
                                                     <a href={project.links.github} target="_blank" rel="noopener noreferrer">
                                                         <ExternalLink className="h-3 w-3 mr-1" />

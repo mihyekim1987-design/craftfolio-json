@@ -54,7 +54,12 @@ npm run preview
    - "Workflow permissions"에서 "Read and write permissions" 선택
    - "Allow GitHub Actions to create and approve pull requests" 체크
 
-3. **자동 배포 트리거**
+3. **GitHub Pages 환경 설정**
+   - 저장소 → Settings → Pages → Environment
+   - "github-pages" 환경이 자동으로 생성됨 (없다면 수동 생성)
+   - Environment protection rules는 비워둠
+
+4. **자동 배포 트리거**
    - `main` 브랜치에 push 시 자동 배포
    - 수동 배포: Actions 탭에서 "Deploy Portfolio" 워크플로우 실행
 
@@ -136,6 +141,7 @@ npm run predeploy
 - [ ] GitHub 저장소 생성 및 코드 push
 - [ ] GitHub Pages 활성화 (Settings → Pages → Source: GitHub Actions)
 - [ ] 워크플로우 권한 설정 (Settings → Actions → General)
+- [ ] GitHub Pages 환경 확인 (Settings → Pages → Environment)
 - [ ] `vite.config.ts`의 base 경로 확인 (저장소명과 일치)
 - [ ] 포트폴리오 데이터 업데이트 (`src/data/portfolio.json`)
 - [ ] 첫 배포 후 URL 확인
@@ -160,6 +166,31 @@ npm run predeploy
 3. **배포 완료 확인**
    - 배포 URL에서 변경사항 확인
    - 약 1-2분 소요
+
+## 🛠️ 문제 해결
+
+### 권한 오류 발생 시
+
+만약 다음과 같은 오류가 발생한다면:
+```
+remote: Permission to [repository] denied to github-actions[bot].
+fatal: unable to access 'https://github.com/[repository].git/': The requested URL returned error: 403
+```
+
+**해결 방법:**
+1. **워크플로우 권한 재설정**
+   - Settings → Actions → General → Workflow permissions
+   - "Read and write permissions" 선택
+   - "Allow GitHub Actions to create and approve pull requests" 체크
+
+2. **GitHub Pages 환경 확인**
+   - Settings → Pages → Environment
+   - "github-pages" 환경이 존재하는지 확인
+   - Environment protection rules가 없는지 확인
+
+3. **브랜치 보호 규칙 확인**
+   - Settings → Branches → Branch protection rules
+   - main 브랜치에 과도한 보호 규칙이 없는지 확인
 
 ## 📞 문의
 

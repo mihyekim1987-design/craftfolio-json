@@ -5,11 +5,11 @@ on:
   push:
     branches: [ main ]
   
-# GitHub Pages 권한 설정 (Settings > Actions > General > Workflow permissions)
+# GitHub Pages 배포에 필요한 권한 설정
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: read    # 코드 읽기 권한
+  pages: write      # GitHub Pages 쓰기 권한
+  id-token: write   # OIDC 토큰 권한
 
 # 환경 변수 설정
 env:
@@ -40,14 +40,24 @@ jobs:
     - name: Build project
       run: npm run build
     
-    # GitHub Pages에 배포
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+    # 빌드 결과 확인
+    - name: Verify build output
+      run: |
+        echo "빌드 결과 확인:"
+        ls -la dist/
+        echo "index.html 파일 확인:"
+        test -f dist/index.html && echo "✅ index.html 파일 존재" || echo "❌ index.html 파일 없음"
+    
+    # GitHub Pages 업로드
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
       if: github.ref == 'refs/heads/main'
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'feat: 포트폴리오 사이트 자동 배포'
-        cname: # 커스텀 도메인이 있다면 여기에 입력
+        path: ./dist
+    
+    # GitHub Pages에 배포
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
+      if: github.ref == 'refs/heads/main'
+      with:
+        name: github-pages

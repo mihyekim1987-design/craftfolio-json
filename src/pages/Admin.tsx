@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ArrowLeft, Settings, Users, BarChart3, FileText, Plus, Edit, Trash2, Download, Upload, Save, Image as ImageIcon } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { toast } from "@/hooks/use-toast";
 import { SkillsTab } from "@/components/admin/SkillsTab";
 import { ProjectsTab } from "@/components/admin/ProjectsTab";
@@ -87,22 +88,21 @@ export const Admin = () => {
     const { data, updateData, refreshData, isLoading, error } = usePortfolio();
     // 🔒 안전 가드 — data.* 접근 전에 필수
     if (isLoading) return <div>Loading...</div>;
-    if (error)     return <div>{error}</div>;
-    if (!data)     return <div>No data</div>;
+    if (error) return <div>{error}</div>;
+    if (!data) return <div>No data</div>;
 
     const [activeTab, setActiveTab] = useState("personal");
     const [editingItem, setEditingItem] = useState<Experience | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     // import type { PortfolioData } from "@/contexts/PortfolioContext";  // 타입 재사용 원하면 활성화
-    const [form, setForm] = useState<any>(null); 
+    const [form, setForm] = useState<any>(null);
 
     // 컨텍스트 data가 로드되면 편집폼에 채우기
     useEffect(() => {
-    if (data) setForm(data);
-  }, [data]);
+        if (data) setForm(data);
+    }, [data]);
 
     // 파일 업로드를 위한 ref
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 저장 상태 관리 (실시간 저장으로 인해 단순화)
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -186,47 +186,6 @@ export const Admin = () => {
         updateData(updatedData);
     };
 
-    // 프로필 이미지 업로드 핸들러
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        // 파일 크기 체크 (5MB 제한)
-        if (file.size > 5 * 1024 * 1024) {
-            toast({
-                title: "파일 크기 오류",
-                description: "파일 크기는 5MB 이하여야 합니다.",
-                variant: "destructive"
-            });
-            return;
-        }
-
-        // 파일 타입 체크
-        if (!file.type.startsWith('image/')) {
-            toast({
-                title: "파일 타입 오류",
-                description: "이미지 파일만 업로드 가능합니다.",
-                variant: "destructive"
-            });
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const base64String = e.target?.result as string;
-            handlePersonalUpdate('profileImage', base64String);
-            toast({
-                title: "업로드 완료",
-                description: "프로필 이미지가 업로드되었습니다."
-            });
-        };
-        reader.readAsDataURL(file);
-    };
-
-    // 파일 선택 트리거
-    const triggerFileUpload = () => {
-        fileInputRef.current?.click();
-    };
 
     // 경력 아이템 추가
     const handleAddExperience = (newItem: Omit<Experience, 'id'>) => {
@@ -374,59 +333,12 @@ export const Admin = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <Label>프로필 이미지</Label>
-                            <div className="space-y-4">
-                                {/* 현재 이미지 미리보기 */}
-                                {data.personal.profileImage && (
-                                    <div className="flex items-center space-x-4">
-                                        <div className="relative">
-                                            <img
-                                                src={data.personal.profileImage}
-                                                alt="프로필 미리보기"
-                                                className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
-                                            />
-                                        </div>
-                                        <div className="flex-1">
-                                            <p className="text-sm text-muted-foreground">현재 프로필 이미지</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* 파일 업로드 버튼 */}
-                                <div className="flex space-x-2">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={triggerFileUpload}
-                                        className="flex items-center space-x-2"
-                                    >
-                                        <ImageIcon className="w-4 h-4" />
-                                        <span>이미지 업로드</span>
-                                    </Button>
-
-                                    {/* URL로 직접 입력하는 옵션도 유지 */}
-                                    <div className="flex-1">
-                                        <Input
-                                            placeholder="또는 이미지 URL을 직접 입력하세요"
-                                            value={data.personal.profileImage.startsWith('data:') ? '' : data.personal.profileImage}
-                                            onChange={(e) => handlePersonalUpdate('profileImage', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* 숨겨진 파일 입력 */}
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    style={{ display: 'none' }}
-                                />
-
-                                <p className="text-xs text-muted-foreground">
-                                    지원 형식: JPG, PNG, GIF (최대 5MB)
-                                </p>
-                            </div>
+                            <ImageUpload
+                                label="프로필 이미지"
+                                value={data.personal.profileImage}
+                                onChange={(value) => handlePersonalUpdate('profileImage', value)}
+                                placeholder="프로필 이미지 URL을 입력하거나 파일을 업로드하세요"
+                            />
                         </div>
                     </div>
                 </CardContent>

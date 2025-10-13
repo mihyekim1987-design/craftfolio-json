@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, ExternalLink } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 interface Project {
     id: number;
@@ -107,11 +108,11 @@ export const ProjectsTab = ({ projects, onUpdate }: ProjectsTabProps) => {
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="image">이미지 URL</Label>
-                                        <Input
-                                            id="image"
+                                        <ImageUpload
+                                            label="프로젝트 이미지"
                                             value={editingProject.image || ''}
-                                            onChange={(e) => setEditingProject({ ...editingProject, image: e.target.value })}
+                                            onChange={(value) => setEditingProject({ ...editingProject, image: value })}
+                                            placeholder="프로젝트 이미지 URL을 입력하거나 파일을 업로드하세요"
                                         />
                                     </div>
                                 </div>

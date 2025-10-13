@@ -3,40 +3,14 @@ import { Button } from "@/components/ui/button";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Hero = () => {
-  const { data, isLoading, error } = usePortfolio();
+  const { data } = usePortfolio();
 
-  // 로딩 상태
-  if (isLoading) {
-    return (
-      <section id="home" className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-lg text-muted-foreground">포트폴리오를 불러오는 중...</p>
-        </div>
-      </section>
-    );
-  }
-
-  // 에러 상태
-  if (error) {
-    return (
-      <section id="home" className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-red-500 mb-4">오류: {error}</p>
-          <Button onClick={() => window.location.reload()}>
-            페이지 새로고침
-          </Button>
-        </div>
-      </section>
-    );
-  }
-
-  // 데이터 없음 상태
+  // 데이터가 없을 때만 처리
   if (!data?.personal) {
     return (
       <section id="home" className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-muted-foreground">데이터를 찾을 수 없습니다.</p>
+          <p className="text-lg text-muted-foreground">데이터를 불러오는 중...</p>
         </div>
       </section>
     );

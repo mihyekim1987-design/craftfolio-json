@@ -18,9 +18,9 @@ const categoryConfig = {
 };
 
 export const Awards = () => {
-  const { data, isLoading } = usePortfolio();
+  const { data } = usePortfolio();
 
-  if (isLoading || !data?.awards) {
+  if (!data?.awards) {
     return (
       <section id="awards" className="py-20">
         <div className="container mx-auto px-4 text-center">

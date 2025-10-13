@@ -27,10 +27,10 @@ interface Project {
 }
 
 export const Projects = () => {
-  const { data, isLoading } = usePortfolio();
+  const { data } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  if (isLoading || !data?.projects) {
+  if (!data?.projects) {
     return (
       <section id="projects" className="py-20">
         <div className="container mx-auto px-4 text-center">
@@ -80,7 +80,7 @@ export const Projects = () => {
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {project.technologies?.slice(0, 3).map((tech, idx) => (
+                  {project.tech?.slice(0, 3).map((tech, idx) => (
                     <Badge key={idx} variant="secondary">
                       {tech}
                     </Badge>

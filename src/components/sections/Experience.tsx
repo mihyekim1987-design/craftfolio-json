@@ -4,9 +4,9 @@ import { Briefcase, CheckCircle2 } from "lucide-react";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Experience = () => {
-  const { data, isLoading } = usePortfolio();
+  const { data } = usePortfolio();
 
-  if (isLoading || !data?.experience) {
+  if (!data?.experience) {
     return (
       <section id="experience" className="py-20">
         <div className="container mx-auto px-4 text-center">

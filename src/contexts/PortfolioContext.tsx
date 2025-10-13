@@ -169,51 +169,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
         error,
     };
 
-    // 로딩 중이거나 데이터가 없을 때는 로딩 화면 표시
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                    <p className="text-gray-600">포트폴리오 데이터를 불러오는 중...</p>
-                </div>
-            </div>
-        );
-    }
-
-    // 오류 발생 시 fallback 데이터 사용
-    if (error && !data) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <button
-                        onClick={refreshData}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        다시 시도
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    // 데이터가 없을 때
-    if (!data) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <p className="text-gray-600 mb-4">포트폴리오 데이터를 찾을 수 없습니다.</p>
-                    <button
-                        onClick={refreshData}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        다시 시도
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    // PortfolioProvider는 데이터만 제공하고, UI 처리는 각 컴포넌트에서 담당
 
     return (
         <PortfolioContext.Provider value={value}>

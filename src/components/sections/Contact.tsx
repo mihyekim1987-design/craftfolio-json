@@ -15,10 +15,10 @@ import { toast } from "sonner";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Contact = () => {
-  const { data, isLoading } = usePortfolio();
+  const { data } = usePortfolio();
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  if (isLoading || !data?.personal) {
+  if (!data?.personal) {
     return (
       <section id="contact" className="py-20">
         <div className="container mx-auto px-4 text-center">

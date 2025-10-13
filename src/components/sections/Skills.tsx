@@ -3,9 +3,9 @@ import { Progress } from "@/components/ui/progress";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 
 export const Skills = () => {
-  const { data, isLoading } = usePortfolio();
+  const { data } = usePortfolio();
 
-  if (isLoading || !data?.skills) {
+  if (!data?.skills) {
     return (
       <section id="skills" className="py-20">
         <div className="container mx-auto px-4 text-center">

@@ -114,20 +114,50 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             };
             const base = getBasePath();
 
+            // 모바일 환경 디버깅
+            console.log("Fetching portfolio data...", {
+                base,
+                buildId,
+                userAgent: navigator.userAgent,
+                url: `${base}/portfolio.json?v=${buildId}`
+            });
+
             // ✅ portfolio.json fetch (캐시 무효화 쿼리 포함)
             const res = await fetch(`${base}/portfolio.json?v=${buildId}`, {
                 cache: "no-store",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            
+            console.log("Fetch response:", {
+                status: res.status,
+                statusText: res.statusText,
+                ok: res.ok,
+                url: res.url
+            });
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
             const json = await res.json();
+            console.log("Portfolio data loaded successfully:", Object.keys(json));
             setData(json);
 
             // 로컬 백업 (옵션)
             localStorage.setItem("portfolio-data", JSON.stringify(json));
         } catch (err) {
             console.error("Error loading portfolio.json:", err);
-
+            
+            // 모바일 환경에서의 상세한 오류 로깅
+            console.error("Mobile debugging info:", {
+                error: err,
+                userAgent: navigator.userAgent,
+                isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+                localStorage: typeof localStorage !== 'undefined',
+                window: typeof window !== 'undefined'
+            });
+            
             // fallback: localStorage 백업 불러오기
             const savedData = localStorage.getItem("portfolio-data");
             if (savedData) {
@@ -138,10 +168,10 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                     console.log("Using cached portfolio data from localStorage");
                 } catch (parseErr) {
                     console.error("Error parsing cached data:", parseErr);
-                    setError("데이터 로딩 중 오류가 발생했습니다.");
+                    setError(`데이터 로딩 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
                 }
             } else {
-                setError("데이터 로딩 중 오류가 발생했습니다.");
+                setError(`데이터 로딩 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
             }
         } finally {
             setIsLoading(false);
@@ -150,6 +180,16 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
 
     useEffect(() => {
         fetchPortfolioData();
+        
+        // 모바일에서 네트워크 연결 문제 시 재시도
+        const retryTimeout = setTimeout(() => {
+            if (!data && !error) {
+                console.log("Retrying portfolio data fetch...");
+                fetchPortfolioData();
+            }
+        }, 5000); // 5초 후 재시도
+        
+        return () => clearTimeout(retryTimeout);
     }, []);
 
     const updateData = (newData: PortfolioData) => {

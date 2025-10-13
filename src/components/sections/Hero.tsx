@@ -10,7 +10,9 @@ export const Hero = () => {
     return (
       <section id="home" className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-muted-foreground">데이터를 불러오는 중...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg text-muted-foreground">포트폴리오 데이터를 불러오는 중...</p>
+          <p className="text-sm text-muted-foreground mt-2">잠시만 기다려주세요</p>
         </div>
       </section>
     );

@@ -103,19 +103,19 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
 
             // 👇 추가: basePath 계산 헬퍼
             const getBasePath = () => {
-            // Actions에서 주입했으면 그 값을 우선 사용
-            if (process.env.NEXT_PUBLIC_BASE_PATH) return process.env.NEXT_PUBLIC_BASE_PATH;
-            // 브라우저 경로에서 /REPO_NAME 추론
-            if (typeof window !== "undefined") {
-            const seg = window.location.pathname.split("/")[1];
-            return seg ? `/${seg}` : "";
-            }
-            return "";
-           };
-           const base = getBasePath();
+                // Actions에서 주입했으면 그 값을 우선 사용
+                if (process.env.NEXT_PUBLIC_BASE_PATH) return process.env.NEXT_PUBLIC_BASE_PATH;
+                // 브라우저 경로에서 /REPO_NAME 추론
+                if (typeof window !== "undefined") {
+                    const seg = window.location.pathname.split("/")[1];
+                    return seg ? `/${seg}` : "";
+                }
+                return "";
+            };
+            const base = getBasePath();
 
             // ✅ portfolio.json fetch (캐시 무효화 쿼리 포함)
-            const res = await fetch(`${base}/data/portfolio.json?v=${buildId}`, {
+            const res = await fetch(`${base}/portfolio.json?v=${buildId}`, {
                 cache: "no-store",
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -127,12 +127,21 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             localStorage.setItem("portfolio-data", JSON.stringify(json));
         } catch (err) {
             console.error("Error loading portfolio.json:", err);
-            setError("데이터 로딩 중 오류가 발생했습니다.");
 
             // fallback: localStorage 백업 불러오기
             const savedData = localStorage.getItem("portfolio-data");
             if (savedData) {
-                setData(JSON.parse(savedData));
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    setData(parsedData);
+                    setError(null); // 백업 데이터가 있으면 오류 해제
+                    console.log("Using cached portfolio data from localStorage");
+                } catch (parseErr) {
+                    console.error("Error parsing cached data:", parseErr);
+                    setError("데이터 로딩 중 오류가 발생했습니다.");
+                }
+            } else {
+                setError("데이터 로딩 중 오류가 발생했습니다.");
             }
         } finally {
             setIsLoading(false);
@@ -160,9 +169,51 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
         error,
     };
 
-    if (isLoading) return <div>Loading portfolio...</div>;
-    if (error) return <div>{error}</div>;
-    if (!data) return <div>No portfolio data found.</div>;
+    // 로딩 중이거나 데이터가 없을 때는 로딩 화면 표시
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+                    <p className="text-gray-600">포트폴리오 데이터를 불러오는 중...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // 오류 발생 시 fallback 데이터 사용
+    if (error && !data) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <button
+                        onClick={refreshData}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        다시 시도
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // 데이터가 없을 때
+    if (!data) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <p className="text-gray-600 mb-4">포트폴리오 데이터를 찾을 수 없습니다.</p>
+                    <button
+                        onClick={refreshData}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        다시 시도
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <PortfolioContext.Provider value={value}>

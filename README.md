@@ -43,6 +43,25 @@ npm run preview
 
 ### GitHub Pages 자동 배포
 
+#### 🚀 간단한 설정 방법 (권장)
+
+1. **GitHub Pages 활성화**
+   - GitHub 저장소 → Settings → Pages
+   - Source: "GitHub Actions" 선택
+
+2. **워크플로우 권한 설정**
+   - 저장소 → Settings → Actions → General
+   - "Workflow permissions"에서 "Read and write permissions" 선택
+   - "Allow GitHub Actions to create and approve pull requests" 체크
+
+3. **자동 배포 트리거**
+   - `main` 브랜치에 push 시 자동 배포
+   - 수동 배포: Actions 탭에서 "Deploy Portfolio" 워크플로우 실행
+
+#### 🔧 고급 설정 방법 (필요시)
+
+만약 기본 설정으로 문제가 발생한다면:
+
 1. **Personal Access Token 생성**
    - GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
    - "Generate new token (classic)" 클릭
@@ -57,19 +76,6 @@ npm run preview
    - "New repository secret" 클릭
    - Name: `PERSONAL_ACCESS_TOKEN`
    - Value: 위에서 생성한 토큰 값 입력
-
-3. **GitHub Pages 활성화**
-   - GitHub 저장소 → Settings → Pages
-   - Source: "GitHub Actions" 선택
-
-4. **워크플로우 권한 설정**
-   - 저장소 → Settings → Actions → General
-   - "Workflow permissions"에서 "Read and write permissions" 선택
-   - "Allow GitHub Actions to create and approve pull requests" 체크
-
-5. **자동 배포 트리거**
-   - `main` 브랜치에 push 시 자동 배포
-   - 수동 배포: Actions 탭에서 "Deploy Portfolio" 워크플로우 실행
 
 ### 배포 URL
 
@@ -126,14 +132,17 @@ npm run predeploy
 
 ## 📋 배포 체크리스트
 
+### 기본 설정 (필수)
 - [ ] GitHub 저장소 생성 및 코드 push
-- [ ] Personal Access Token 생성 및 권한 설정
-- [ ] GitHub Secrets에 `PERSONAL_ACCESS_TOKEN` 등록
 - [ ] GitHub Pages 활성화 (Settings → Pages → Source: GitHub Actions)
 - [ ] 워크플로우 권한 설정 (Settings → Actions → General)
 - [ ] `vite.config.ts`의 base 경로 확인 (저장소명과 일치)
 - [ ] 포트폴리오 데이터 업데이트 (`src/data/portfolio.json`)
 - [ ] 첫 배포 후 URL 확인
+
+### 고급 설정 (문제 발생시)
+- [ ] Personal Access Token 생성 및 권한 설정
+- [ ] GitHub Secrets에 `PERSONAL_ACCESS_TOKEN` 등록
 
 ## 🔄 배포 프로세스
 

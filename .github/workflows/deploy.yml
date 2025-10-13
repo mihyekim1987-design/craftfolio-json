@@ -11,6 +11,10 @@ permissions:
   pages: write
   id-token: write
 
+# 환경 변수 설정
+env:
+  NODE_VERSION: '18'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -20,14 +24,12 @@ jobs:
     # 소스 코드 체크아웃
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     
     # Node.js 환경 설정
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
     
     # 의존성 설치
@@ -43,7 +45,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
-        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'

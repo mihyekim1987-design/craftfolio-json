@@ -26,7 +26,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={
               <ErrorBoundary>
-                <AdminSimple />
+                <Admin />
               </ErrorBoundary>
             } />
             <Route path="*" element={<NotFound />} />

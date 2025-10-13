@@ -132,16 +132,7 @@
     {
       "id": 1,
       "title": "미니해커톤 프로젝트",
-      "description": "주요 도시 기온.습도 폭염 지역 분석
-
-(부제: 2000~2025 기상 데이터 기반)
-
-
-3조 : 김미혜, 신용호, 임진호, 장경수, 최경규
-
-날짜: 2025.09.11~12
-
-",
+      "description": "주요 도시 기온.습도 폭염 지역 분석.\n(부제: 2000~2025 기상 데이터 기반).\n3조 : 김미혜, 신용호, 임진호, 장경수, 최경규.\n날짜: 2025.09.11~12",
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
       "tags": [
         "Colab",
@@ -160,7 +151,7 @@
         "Gemini"
       ],
       "contribution": "팀장,자료 정제, PPT 발표",
-      "impact": "기상 데이터 수집과 정제,결측치 처리 방법 제시, 폭염 분석 및 주요 시사점 확인, 한국지도 시각화, 히트맵",
+      "impact": "기상 데이터 수집과 정제.\n결측치 처리 방법 제시.\n폭염 분석 및 주요 시사점 확인.\n한국지도 시각화.\n히트맵",
       "links": {
         "PPT": "https://gemini.google.com/share/ac6e7e6841e2",
         "Colab": "https://colab.research.google.com/drive/12g9fUhAXHI8wN1Dm74zbvu0nPMFbFlRi"
@@ -181,8 +172,7 @@
         "Vim",
         "Github"
       ],
-      "contribution": "팀장",
-      "impact": "새로운 하나의 repo에서 진행, Organization 세팅 및 관리",
+      "contribution": "팀장.\nOrganization 세팅 및 관리""impact": "새로운 하나의 repo에서 진행, 팀원 지원 및 병합",
       "link": {
         "github": "https://github.com/fc-fb-1/fizzbuzz-for-team"
       }

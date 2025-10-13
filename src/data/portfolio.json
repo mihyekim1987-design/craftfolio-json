@@ -182,14 +182,6 @@
   "awards": [
     {
       "id": 1,
-      "title": "La Foundation Le Cordon Bleu",
-      "period": "2023.02",
-      "institution": "Sunway University",
-      "category": "certification",
-      "details": "Diploma in Culinary Arts"
-    },
-    {
-      "id": 3,
       "title": "AI 서비스 기획 / 개발 부트캠프 1기",
       "period": "2025.08~",
       "institution": "패스트캠퍼스",
@@ -197,36 +189,44 @@
       "details": "Pursuing"
     },
     {
-      "title": "Food Handler Training Course",
-      "period": "2020",
-      "institution": "Kementerian Kesihatan Malaysia",
-      "category": "certification",
-      "details": "말레이시아 보건부",
-      "id": 5
-    },
-    {
-      "title": "컬러 코디네이터 1급",
-      "period": "2010",
-      "institution": "도쿄상공회의소",
-      "category": "certification",
-      "details": "",
-      "id": 6
-    },
-    {
+      "id": 2,
       "title": "베트남 인도네시아학부",
       "period": "2023.03 ~",
       "institution": "사이버한국외국어대학",
       "category": "training",
-      "details": "Pursuing",
-      "id": 7
+      "details": "Pursuing"
     },
     {
+      "id": 3,
+      "title": "La Foundation Le Cordon Bleu",
+      "period": "2023.02",
+      "institution": "Sunway University",
+      "category": "certification",
+      "details": "Diploma in Culinary Arts"
+    },
+    {
+      "id": 4,
       "title": "Diploma in Culinary Arts",
       "period": "2023.02",
       "institution": "Sunway University",
       "category": "training",
-      "details": "Graduated",
-      "id": 8
+      "details": "Graduated"
+    },
+    {
+      "id": 5,
+      "title": "Food Handler Training Course",
+      "period": "2020",
+      "institution": "Kementerian Kesihatan Malaysia",
+      "category": "certification",
+      "details": "말레이시아 보건부"
+    },
+    {
+      "id": 6,
+      "title": "컬러 코디네이터 1급",
+      "period": "2010",
+      "institution": "도쿄상공회의소",
+      "category": "certification",
+      "details": ""
     }
   ]
 }

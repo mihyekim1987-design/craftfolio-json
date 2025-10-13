@@ -94,7 +94,7 @@ craftfolio-json/
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions 배포 워크플로우
-├── public/                     # 정적 파일
+├── public/                   # 정적 파일
 ├── src/
 │   ├── components/            # React 컴포넌트
 │   │   ├── sections/         # 섹션별 컴포넌트

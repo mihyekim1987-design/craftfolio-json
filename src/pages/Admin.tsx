@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,12 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ArrowLeft, Settings, Users, BarChart3, FileText, Plus, Edit, Trash2, Download, Upload, Save, Image as ImageIcon } from "lucide-react";
-import portfolioData from "@/data/portfolio.json";
 import { toast } from "@/hooks/use-toast";
 import { SkillsTab } from "@/components/admin/SkillsTab";
 import { ProjectsTab } from "@/components/admin/ProjectsTab";
 import { AwardsTab } from "@/components/admin/AwardsTab";
 import { usePortfolio } from "@/contexts/PortfolioContext";
+
 
 // 타입 정의
 interface Experience {
@@ -84,10 +84,22 @@ interface PortfolioData {
  */
 export const Admin = () => {
     const navigate = useNavigate();
-    const { data, updateData } = usePortfolio();
+    const { data, updateData, refreshData, isLoading, error } = usePortfolio();
+    // 🔒 안전 가드 — data.* 접근 전에 필수
+    if (isLoading) return <div>Loading...</div>;
+    if (error)     return <div>{error}</div>;
+    if (!data)     return <div>No data</div>;
+
     const [activeTab, setActiveTab] = useState("personal");
     const [editingItem, setEditingItem] = useState<Experience | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    // import type { PortfolioData } from "@/contexts/PortfolioContext";  // 타입 재사용 원하면 활성화
+    const [form, setForm] = useState<any>(null); 
+
+    // 컨텍스트 data가 로드되면 편집폼에 채우기
+    useEffect(() => {
+    if (data) setForm(data);
+  }, [data]);
 
     // 파일 업로드를 위한 ref
     const fileInputRef = useRef<HTMLInputElement>(null);

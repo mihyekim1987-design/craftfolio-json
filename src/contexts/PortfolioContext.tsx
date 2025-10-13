@@ -130,14 +130,14 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             console.log("Fetch response:", {
                 status: res.status,
                 statusText: res.statusText,
                 ok: res.ok,
                 url: res.url
             });
-            
+
             if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
             const json = await res.json();
@@ -148,7 +148,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             localStorage.setItem("portfolio-data", JSON.stringify(json));
         } catch (err) {
             console.error("Error loading portfolio.json:", err);
-            
+
             // 모바일 환경에서의 상세한 오류 로깅
             console.error("Mobile debugging info:", {
                 error: err,
@@ -157,7 +157,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                 localStorage: typeof localStorage !== 'undefined',
                 window: typeof window !== 'undefined'
             });
-            
+
             // fallback: localStorage 백업 불러오기
             const savedData = localStorage.getItem("portfolio-data");
             if (savedData) {
@@ -180,7 +180,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
 
     useEffect(() => {
         fetchPortfolioData();
-        
+
         // 모바일에서 네트워크 연결 문제 시 재시도
         const retryTimeout = setTimeout(() => {
             if (!data && !error) {
@@ -188,13 +188,36 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                 fetchPortfolioData();
             }
         }, 5000); // 5초 후 재시도
-        
+
         return () => clearTimeout(retryTimeout);
     }, []);
 
     const updateData = (newData: PortfolioData) => {
         setData(newData);
         localStorage.setItem("portfolio-data", JSON.stringify(newData));
+
+        // 자동 동기화: src/data/portfolio.json 업데이트
+        try {
+            // src/data/portfolio.json 파일 업데이트
+            const fs = require('fs');
+            const path = require('path');
+            const dataFilePath = path.join(process.cwd(), 'src', 'data', 'portfolio.json');
+
+            fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 2), 'utf8');
+            console.log('✅ src/data/portfolio.json 자동 업데이트 완료');
+
+            // 다른 파일들도 동기화
+            const rootFilePath = path.join(process.cwd(), 'portfolio.json');
+            const publicFilePath = path.join(process.cwd(), 'public', 'portfolio.json');
+
+            fs.writeFileSync(rootFilePath, JSON.stringify(newData, null, 2), 'utf8');
+            fs.writeFileSync(publicFilePath, JSON.stringify(newData, null, 2), 'utf8');
+
+            console.log('✅ 모든 포트폴리오 파일 자동 동기화 완료');
+        } catch (syncError) {
+            console.error('❌ 자동 동기화 실패:', syncError);
+            // 동기화 실패해도 데이터 업데이트는 계속 진행
+        }
     };
 
     const refreshData = () => {

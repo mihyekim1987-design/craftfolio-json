@@ -132,16 +132,8 @@
     {
       "id": 1,
       "title": "미니해커톤 프로젝트",
-      "description": "주요 도시 기온.습도 폭염 지역 분석
-
-(부제: 2000~2025 기상 데이터 기반)
-
-
-3조 : 김미혜, 신용호, 임진호, 장경수, 최경규
-
-날짜: 2025.09.11~12
-
-","image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
+      "description": "주요 도시 기온.습도 폭염 지역 분석\n(부제: 2000~2025 기상 데이터 기반)\n3조 : 김미혜, 신용호, 임진호, 장경수, 최경규\n날짜: 2025.09.11~12",
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
       "tags": [
         "Colab",
         "Python",
@@ -185,7 +177,7 @@
       "link": {
         "github": "https://github.com/fc-fb-1/fizzbuzz-for-team"
       }
-    },
+    }
   ],
   "awards": [
     {

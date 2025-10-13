@@ -24,9 +24,29 @@ function syncPortfolioData() {
             process.exit(1);
         }
 
+        // JSON 유효성 검사
+        const sourceContent = fs.readFileSync(sourceFile, 'utf8');
+        try {
+            JSON.parse(sourceContent);
+            console.log('✅ 소스 파일 JSON 유효성 검사 통과');
+        } catch (parseError) {
+            console.error('❌ 소스 파일 JSON 구문 오류:', parseError.message);
+            process.exit(1);
+        }
+
         // 파일 복사
         fs.copyFileSync(sourceFile, rootFile);
         fs.copyFileSync(sourceFile, publicFile);
+
+        // 복사된 파일들도 JSON 유효성 검사
+        try {
+            JSON.parse(fs.readFileSync(rootFile, 'utf8'));
+            JSON.parse(fs.readFileSync(publicFile, 'utf8'));
+            console.log('✅ 복사된 파일들 JSON 유효성 검사 통과');
+        } catch (parseError) {
+            console.error('❌ 복사된 파일 JSON 구문 오류:', parseError.message);
+            process.exit(1);
+        }
 
         console.log('✅ 포트폴리오 데이터 동기화 완료');
         console.log(`📁 ${sourceFile} → ${rootFile}`);

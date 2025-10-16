@@ -111,8 +111,9 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             // 👇 fetch API는 Vite base를 자동으로 처리하지 않으므로 명시적으로 추가
             const base = import.meta.env.BASE_URL || '/';
             
-            // 안전한 URL 생성
-            const portfolioUrl = `${base}portfolio.json?v=${buildId}`.replace(/\/+/g, '/').replace(':/', '://');
+            // 안전한 URL 생성 (base와 path 사이에 슬래시 보장)
+            const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+            const portfolioUrl = `${cleanBase}/portfolio.json?v=${buildId}`;
             console.log('Fetching from URL:', portfolioUrl);
             console.log('Base URL:', base);
 

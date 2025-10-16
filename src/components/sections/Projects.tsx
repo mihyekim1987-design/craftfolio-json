@@ -42,9 +42,11 @@ export const Projects = () => {
       return url;
     }
     
-    // 상대 경로에 base 추가
+    // 상대 경로에 base 추가 (슬래시 보장)
     const base = import.meta.env.BASE_URL || '/';
-    return `${base}${url}`.replace(/\/+/g, '/').replace(':/', '://');
+    const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+    const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+    return `${cleanBase}${cleanUrl}`;
   };
 
   // 모달이 열릴 때 배경 스크롤 방지

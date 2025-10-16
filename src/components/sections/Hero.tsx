@@ -28,9 +28,11 @@ export const Hero = () => {
       return url;
     }
     
-    // 상대 경로에 base 추가
+    // 상대 경로에 base 추가 (슬래시 보장)
     const base = import.meta.env.BASE_URL || '/';
-    return `${base}${url}`.replace(/\/+/g, '/').replace(':/', '://');
+    const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+    const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+    return `${cleanBase}${cleanUrl}`;
   };
 
   return (

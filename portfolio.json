@@ -10,7 +10,12 @@
     "github": "https://github.com/mihyekim1987-design",
     "linkedin": "https://linkedin.com/in/mihye-kim1987",
     "website": "",
-    "profileImage": "/profile-image.jpg"
+    "profileImage": "/profile-image.jpg",
+    "stats": {
+      "experience": "5+",
+      "projects": "4",
+      "clients": "10+"
+    }
   },
   "experience": [
     {

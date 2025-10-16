@@ -18,10 +18,11 @@ export const About = () => {
 
   const { name, bio, stats } = data.personal;
 
+  // stats가 없을 경우 기본값 사용
   const statItems = [
-    { icon: Briefcase, label: "Years Experience", value: stats.experience },
-    { icon: Award, label: "Projects Completed", value: stats.projects },
-    { icon: Users, label: "Happy Clients", value: stats.clients },
+    { icon: Briefcase, label: "Years Experience", value: stats?.experience || "0" },
+    { icon: Award, label: "Projects Completed", value: stats?.projects || "0" },
+    { icon: Users, label: "Happy Clients", value: stats?.clients || "0" },
   ];
 
   return (

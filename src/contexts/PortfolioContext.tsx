@@ -197,14 +197,28 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                 const savedData = localStorage.getItem("portfolio-data");
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
-                    setData(parsedData);
-                    setError(null); // 백업 데이터가 있으면 오류 해제
-                    console.log("✅ Using cached portfolio data from localStorage");
+                    
+                    // 데이터 구조 검증
+                    if (parsedData && 
+                        parsedData.personal && 
+                        parsedData.experience && 
+                        parsedData.skills && 
+                        parsedData.projects && 
+                        parsedData.awards) {
+                        setData(parsedData);
+                        setError(null); // 백업 데이터가 있으면 오류 해제
+                        console.log("✅ Using cached portfolio data from localStorage");
+                    } else {
+                        console.warn("⚠️ localStorage 데이터 구조가 올바르지 않습니다. 삭제합니다.");
+                        localStorage.removeItem("portfolio-data");
+                        setError(`데이터 로딩 실패: ${errorMessage}. 페이지를 새로고침해주세요.`);
+                    }
                 } else {
                     setError(`데이터 로딩 중 오류가 발생했습니다: ${errorMessage}`);
                 }
             } catch (parseErr) {
                 console.error("Error parsing cached data:", parseErr);
+                localStorage.removeItem("portfolio-data"); // 잘못된 데이터 삭제
                 setError(`데이터 로딩 실패: ${errorMessage}`);
             }
         } finally {

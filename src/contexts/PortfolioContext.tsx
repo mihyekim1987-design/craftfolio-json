@@ -108,13 +108,13 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             
             console.log('PortfolioContext: Starting data fetch...');
 
-            // 👇 Vite가 자동으로 base를 처리하므로 빈 문자열 사용
-            const base = '';
+            // 👇 fetch API는 Vite base를 자동으로 처리하지 않으므로 명시적으로 추가
+            const base = import.meta.env.BASE_URL || '/';
             
-            // 안전한 URL 생성 (Vite가 자동으로 base 경로를 추가함)
-            const portfolioUrl = `${base}/portfolio.json?v=${buildId}`;
+            // 안전한 URL 생성
+            const portfolioUrl = `${base}portfolio.json?v=${buildId}`.replace(/\/+/g, '/').replace(':/', '://');
             console.log('Fetching from URL:', portfolioUrl);
-            console.log('Vite base will be automatically prepended:', import.meta.env.BASE_URL);
+            console.log('Base URL:', base);
 
             // 모바일 환경 디버깅
             console.log("Fetching portfolio data...", {

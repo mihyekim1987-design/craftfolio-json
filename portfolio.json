@@ -91,7 +91,7 @@
   ],
   "skills": [
     {
-      "category": "Skills",
+      "category": "What I Know",
       "items": [
         {
           "name": "Communication",
@@ -111,6 +111,31 @@
         },
         {
           "name": "Barista",
+          "level": 50
+        }
+      ]
+    },
+    {
+      "category": "What I'm Exploring",
+      "items": [
+        {
+          "name": "Python",
+          "level": 40
+        },
+        {
+          "name": "Git & Github",
+          "level": 60
+        },
+        {
+          "name": "Json",
+          "level": 40
+        },
+        {
+          "name": "SQL",
+          "level": 50
+        },
+        {
+          "name": "HTML",
           "level": 50
         }
       ]

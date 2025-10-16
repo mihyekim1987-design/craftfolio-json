@@ -297,6 +297,14 @@
       "category": "certification",
       "details": "도쿄상공회의소(TOSHO)에서 주최한 국제공인시험",
       "id": 13
+    },
+    {
+      "id": 14,
+      "title": "성인 중급 인정증",
+      "period": "2011.12.17",
+      "institution": "스에나가 메소드 색채심리연구소",
+      "category": "training",
+      "details": "성인 중급 과정 수료"
     }
   ]
 }

@@ -59,7 +59,7 @@ jobs:
         echo "프로젝트 빌드 완료"
       env:
         NEXT_PUBLIC_BUILD_ID: ${{ github.sha }}
-        NEXT_PUBLIC_BASE_PATH: /craftfolio.json
+        NEXT_PUBLIC_BASE_PATH: /craftfolio-json
     
     # 빌드 결과 확인
     - name: Verify build output

@@ -5,8 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // GitHub Pages 배포를 위한 base 경로 설정
-  base: mode === 'production' ? '/craftfolio-json/' : '/',
+  // GitHub Pages 배포를 위한 base 경로 설정 (끝에 슬래시 제거)
+  base: mode === 'production' ? '/craftfolio-json' : '/',
 
   server: {
     host: "::",

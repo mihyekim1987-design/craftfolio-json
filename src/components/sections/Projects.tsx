@@ -35,6 +35,18 @@ export const Projects = () => {
   const { data } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+  // 이미지 URL 처리: basePath를 고려한 절대 경로 생성
+  const getImageUrl = (url: string) => {
+    // 이미 절대 URL이거나 data: URL인 경우 그대로 반환
+    if (url.startsWith('http') || url.startsWith('data:')) {
+      return url;
+    }
+    
+    // 상대 경로인 경우 basePath 추가
+    const basePath = import.meta.env.PROD ? '/craftfolio-json' : '';
+    return `${basePath}${url}`;
+  };
+
   // 모달이 열릴 때 배경 스크롤 방지
   useEffect(() => {
     if (selectedProject) {
@@ -83,9 +95,13 @@ export const Projects = () => {
             >
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src={project.image}
+                  src={getImageUrl(project.image)}
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-smooth"
+                  onError={(e) => {
+                    console.error('Failed to load project image:', project.image);
+                    e.currentTarget.src = '/placeholder.svg';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-0 group-hover:opacity-100 transition-smooth flex items-end p-4">
                   <p className="text-sm text-foreground">Click for details</p>
@@ -125,9 +141,13 @@ export const Projects = () => {
                 </DialogHeader>
                 <div className="space-y-6">
                   <img
-                    src={selectedProject.image}
+                    src={getImageUrl(selectedProject.image)}
                     alt={selectedProject.title}
                     className="w-full h-64 object-cover rounded-lg"
+                    onError={(e) => {
+                      console.error('Failed to load project image:', selectedProject.image);
+                      e.currentTarget.src = '/placeholder.svg';
+                    }}
                   />
                   <div>
                     <h4 className="font-semibold mb-2">Description</h4>

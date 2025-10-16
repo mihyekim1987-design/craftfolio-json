@@ -21,6 +21,18 @@ export const Hero = () => {
   // 정상 데이터가 있을 때
   const { name, title, tagline, profileImage } = data.personal;
 
+  // 이미지 URL 처리: basePath를 고려한 절대 경로 생성
+  const getImageUrl = (url: string) => {
+    // 이미 절대 URL이거나 data: URL인 경우 그대로 반환
+    if (url.startsWith('http') || url.startsWith('data:')) {
+      return url;
+    }
+    
+    // 상대 경로인 경우 basePath 추가
+    const basePath = import.meta.env.PROD ? '/craftfolio-json' : '';
+    return `${basePath}${url}`;
+  };
+
   return (
     <section
       id="home"
@@ -38,9 +50,14 @@ export const Hero = () => {
           <div className="relative">
             <div className="absolute inset-0 gradient-primary rounded-3xl blur-xl opacity-50 animate-pulse" />
             <img
-              src={profileImage}
+              src={getImageUrl(profileImage)}
               alt={name}
               className="relative w-48 h-48 md:w-56 md:h-56 object-cover rounded-3xl shadow-glow"
+              onError={(e) => {
+                console.error('Failed to load profile image:', profileImage);
+                // 로딩 실패 시 placeholder 이미지 사용
+                e.currentTarget.src = '/placeholder.svg';
+              }}
             />
           </div>
 

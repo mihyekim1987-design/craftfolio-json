@@ -110,14 +110,12 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
 
             // 👇 추가: basePath 계산 헬퍼
             const getBasePath = () => {
-                // Actions에서 주입했으면 그 값을 우선 사용
-                if (process.env.NEXT_PUBLIC_BASE_PATH) return process.env.NEXT_PUBLIC_BASE_PATH;
-                // 브라우저 경로에서 /REPO_NAME 추론
-                if (typeof window !== "undefined") {
-                    const seg = window.location.pathname.split("/")[1];
-                    return seg ? `/${seg}` : "";
+                // 프로덕션 환경에서는 /craftfolio-json 고정
+                if (import.meta.env.PROD) {
+                    return '/craftfolio-json';
                 }
-                return "";
+                // 개발 환경에서는 빈 문자열
+                return '';
             };
             const base = getBasePath();
             
@@ -130,26 +128,36 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                 base,
                 buildId,
                 userAgent: navigator.userAgent,
-                url: `${base}/portfolio.json?v=${buildId}`
+                url: portfolioUrl,
+                isProduction: import.meta.env.PROD
             });
 
-            // ✅ portfolio.json fetch (캐시 무효화 쿼리 포함)
+            // ✅ portfolio.json fetch (캐시 무효화 쿼리 포함, 타임아웃 추가)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초 타임아웃
+
             const res = await fetch(portfolioUrl, {
                 cache: "no-store",
+                signal: controller.signal,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
             });
 
+            clearTimeout(timeoutId);
+
             console.log("Fetch response:", {
                 status: res.status,
                 statusText: res.statusText,
                 ok: res.ok,
-                url: res.url
+                url: res.url,
+                contentLength: res.headers.get('content-length')
             });
 
-            if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            if (!res.ok) {
+                throw new Error(`데이터를 불러올 수 없습니다 (HTTP ${res.status})`);
+            }
 
             const json = await res.json();
             console.log("Portfolio data loaded successfully:", Object.keys(json));
@@ -171,11 +179,21 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
         } catch (err) {
             console.error("Error loading portfolio.json:", err);
 
+            let errorMessage = '알 수 없는 오류';
+            if (err instanceof Error) {
+                if (err.name === 'AbortError') {
+                    errorMessage = '데이터 로딩 시간이 초과되었습니다. 네트워크 연결을 확인해주세요.';
+                } else {
+                    errorMessage = err.message;
+                }
+            }
+
             // 모바일 환경에서의 상세한 오류 로깅
-            console.error("Mobile debugging info:", {
+            console.error("Debugging info:", {
                 error: err,
                 userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
                 isMobile: typeof navigator !== 'undefined' ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) : false,
+                isOnline: typeof navigator !== 'undefined' ? navigator.onLine : 'unknown',
                 localStorage: typeof localStorage !== 'undefined',
                 window: typeof window !== 'undefined'
             });
@@ -187,13 +205,13 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
                     const parsedData = JSON.parse(savedData);
                     setData(parsedData);
                     setError(null); // 백업 데이터가 있으면 오류 해제
-                    console.log("Using cached portfolio data from localStorage");
+                    console.log("✅ Using cached portfolio data from localStorage");
                 } else {
-                    setError(`데이터 로딩 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+                    setError(`데이터 로딩 중 오류가 발생했습니다: ${errorMessage}`);
                 }
             } catch (parseErr) {
                 console.error("Error parsing cached data:", parseErr);
-                setError(`데이터 로딩 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+                setError(`데이터 로딩 실패: ${errorMessage}`);
             }
         } finally {
             setIsLoading(false);

@@ -35,16 +35,15 @@ export const Projects = () => {
   const { data } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  // 이미지 URL 처리: basePath를 고려한 절대 경로 생성
+  // 이미지 URL 처리: Vite가 자동으로 base를 처리
   const getImageUrl = (url: string) => {
     // 이미 절대 URL이거나 data: URL인 경우 그대로 반환
     if (url.startsWith('http') || url.startsWith('data:')) {
       return url;
     }
     
-    // 상대 경로인 경우 basePath 추가
-    const basePath = import.meta.env.PROD ? '/craftfolio-json' : '';
-    return `${basePath}${url}`;
+    // 상대 경로는 그대로 반환 (Vite가 자동으로 base를 추가함)
+    return url;
   };
 
   // 모달이 열릴 때 배경 스크롤 방지

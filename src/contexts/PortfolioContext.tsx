@@ -108,20 +108,13 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
             
             console.log('PortfolioContext: Starting data fetch...');
 
-            // 👇 추가: basePath 계산 헬퍼
-            const getBasePath = () => {
-                // 프로덕션 환경에서는 /craftfolio-json 고정
-                if (import.meta.env.PROD) {
-                    return '/craftfolio-json';
-                }
-                // 개발 환경에서는 빈 문자열
-                return '';
-            };
-            const base = getBasePath();
+            // 👇 Vite가 자동으로 base를 처리하므로 빈 문자열 사용
+            const base = '';
             
-            // 안전한 URL 생성
+            // 안전한 URL 생성 (Vite가 자동으로 base 경로를 추가함)
             const portfolioUrl = `${base}/portfolio.json?v=${buildId}`;
             console.log('Fetching from URL:', portfolioUrl);
+            console.log('Vite base will be automatically prepended:', import.meta.env.BASE_URL);
 
             // 모바일 환경 디버깅
             console.log("Fetching portfolio data...", {
